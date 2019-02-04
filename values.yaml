@@ -2,11 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
+  repository: fifoosab/flask
+  tag: latest
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -28,12 +28,8 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   paths:
     - path: /
-      host: "mytest.com"
-      serviceName: "test-c-mytest"
-      servicePort: "80"
-    - path: /
-      host: "prom.com"
-      serviceName: "test-c-prometheus-server"
+      host: "fifoome.com"
+      serviceName: "ms-mytest"
       servicePort: "80"
   hosts:
     - chart-example.local
@@ -320,7 +316,7 @@ nginx-ingress:
     ##
     podAnnotations: {}
 
-    replicaCount: 2
+    replicaCount: 1
 
     minAvailable: 1
 
@@ -333,7 +329,7 @@ nginx-ingress:
        memory: 64Mi
 
     autoscaling:
-      enabled: true
+      enabled: false
       minReplicas: 1
       maxReplicas: 11
       targetCPUUtilizationPercentage: 50
