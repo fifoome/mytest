@@ -1,0 +1,19 @@
+dependencies:
+- name: nginx-ingress
+  version: "1.2.3"
+  repository: "https://kubernetes-charts.storage.googleapis.com"
+- name: cockroachdb
+  version: "2.0.10"
+  repository: "https://kubernetes-charts.storage.googleapis.com"
+- name: prometheus
+  version: "8.6.1"
+  repository: "https://kubernetes-charts.storage.googleapis.com"
+- name: redis-ha
+  version: "3.1.3"
+  repository: "https://kubernetes-charts.storage.googleapis.com"
+- name: hpa-operator
+  version: "0.0.7"
+  repository: "http://kubernetes-charts.banzaicloud.com/branch/master"
+# - name: stash
+#   version: "0.8.2"
+#   repository: "https://charts.appscode.com/stable/"

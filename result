@@ -1,0 +1,2887 @@
+[debug] Created tunnel using local port: '57533'
+
+[debug] SERVER: "127.0.0.1:57533"
+
+[debug] Original chart version: ""
+[debug] CHART PATH: /Users/thedmbp/code/mytest
+
+NAME:   test-b
+REVISION: 1
+RELEASED: Sun Feb  3 19:39:27 2019
+CHART: mytest-0.1.0
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+affinity: {}
+annotations: []
+cockroachdb:
+  CacheSize: 25%
+  ClusterDomain: cluster.local
+  Component: cockroachdb
+  ExternalGrpcName: grpc
+  ExternalGrpcPort: 26257
+  ExternalHttpPort: 8080
+  HttpName: http
+  Image: cockroachdb/cockroach
+  ImagePullPolicy: Always
+  ImageTag: v2.1.4
+  InternalGrpcName: grpc
+  InternalGrpcPort: 26257
+  InternalHttpPort: 8080
+  JoinExisting: []
+  Locality: ""
+  MaxSQLMemory: 25%
+  MaxUnavailable: 1
+  Name: cockroachdb
+  NetworkPolicy:
+    AllowExternal: true
+    Enabled: false
+  NodeSelector: {}
+  PodManagementPolicy: Parallel
+  Replicas: 3
+  Resources: {}
+  Secure:
+    Enabled: false
+    RequestCertsImage: cockroachdb/cockroach-k8s-request-cert
+    RequestCertsImageTag: "0.4"
+    ServiceAccount:
+      Create: true
+      Name: null
+  Service:
+    annotations: {}
+    type: ClusterIP
+  Storage: 100Gi
+  StorageClass: null
+  Tolerations: {}
+  UpdateStrategy:
+    type: RollingUpdate
+  global: {}
+fullnameOverride: ""
+hpa-operator:
+  affinity: {}
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: banzaicloud/hpa-operator
+    tag: 0.1.4
+  metricsServer:
+    enabled: false
+  nodeSelector: {}
+  rbac:
+    apiVersion: v1beta1
+    install: true
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  tolerations: []
+image:
+  pullPolicy: IfNotPresent
+  repository: nginx
+  tag: stable
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  enabled: true
+  hosts:
+  - chart-example.local
+  paths:
+  - host: mytest.com
+    path: /
+    serviceName: test-c-mytest
+    servicePort: "80"
+  - host: prom.com
+    path: /
+    serviceName: test-c-prometheus-server
+    servicePort: "80"
+  tls: []
+nameOverride: ""
+nginx-ingress:
+  controller:
+    affinity: {}
+    autoscaling:
+      enabled: true
+      maxReplicas: 11
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+    config: {}
+    customTemplate:
+      configMapKey: ""
+      configMapName: ""
+    daemonset:
+      hostPorts:
+        http: 80
+        https: 443
+      useHostPort: false
+    defaultBackendService: ""
+    dnsPolicy: ClusterFirst
+    electionID: ingress-controller-leader
+    extraArgs: {}
+    extraContainers: []
+    extraEnvs: []
+    extraInitContainers: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    headers: {}
+    hostNetwork: false
+    image:
+      pullPolicy: IfNotPresent
+      repository: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+      runAsUser: 33
+      tag: 0.22.0
+    ingressClass: nginx
+    kind: Deployment
+    lifecycle: {}
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      port: 10254
+      successThreshold: 1
+      timeoutSeconds: 1
+    metrics:
+      enabled: true
+      service:
+        annotations: {}
+        clusterIP: ""
+        externalIPs: []
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        servicePort: 9913
+        type: ClusterIP
+      serviceMonitor:
+        additionalLabels: {}
+        enabled: false
+    minAvailable: 1
+    minReadySeconds: 0
+    name: controller
+    nodeSelector: {}
+    podAnnotations: {}
+    podLabels: {}
+    priorityClassName: ""
+    publishService:
+      enabled: false
+      pathOverride: ""
+    readinessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      port: 10254
+      successThreshold: 1
+      timeoutSeconds: 1
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+    scope:
+      enabled: false
+      namespace: ""
+    service:
+      annotations: {}
+      clusterIP: ""
+      enableHttp: true
+      enableHttps: true
+      externalIPs: []
+      externalTrafficPolicy: ""
+      healthCheckNodePort: 0
+      labels: {}
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      nodePorts:
+        http: ""
+        https: ""
+      targetPorts:
+        http: http
+        https: https
+      type: LoadBalancer
+    stats:
+      enabled: true
+      service:
+        annotations: {}
+        clusterIP: ""
+        externalIPs: []
+        loadBalancerIP: ""
+        loadBalancerSourceRanges: []
+        servicePort: 18080
+        type: ClusterIP
+    tolerations: []
+    updateStrategy: {}
+  defaultBackend:
+    affinity: {}
+    enabled: true
+    extraArgs: {}
+    image:
+      pullPolicy: IfNotPresent
+      repository: k8s.gcr.io/defaultbackend
+      tag: "1.4"
+    minAvailable: 1
+    name: default-backend
+    nodeSelector: {}
+    podAnnotations: {}
+    podLabels: {}
+    port: 8080
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalIPs: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 80
+      type: ClusterIP
+    tolerations: []
+  global: {}
+  imagePullSecrets: []
+  podSecurityPolicy:
+    enabled: false
+  rbac:
+    create: true
+  revisionHistoryLimit: 10
+  serviceAccount:
+    create: true
+    name: null
+  tcp: {}
+  udp: {}
+nodeSelector: {}
+prometheus:
+  alertmanager:
+    affinity: {}
+    baseURL: /
+    configFileName: alertmanager.yml
+    configFromSecret: ""
+    configMapOverrideName: ""
+    enabled: true
+    extraArgs: {}
+    extraEnv: {}
+    image:
+      pullPolicy: IfNotPresent
+      repository: prom/alertmanager
+      tag: v0.15.3
+    ingress:
+      annotations: {}
+      enabled: false
+      extraLabels: {}
+      hosts: []
+      tls: []
+    name: alertmanager
+    nodeSelector: {}
+    persistentVolume:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      enabled: true
+      existingClaim: ""
+      mountPath: /data
+      size: 2Gi
+      subPath: ""
+    podAnnotations: {}
+    prefixURL: ""
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
+    securityContext: {}
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalIPs: []
+      labels: {}
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 80
+      type: ClusterIP
+    statefulSet:
+      enabled: true
+      headless:
+        annotations: {}
+        labels: {}
+        servicePort: 80
+      podManagementPolicy: OrderedReady
+    tolerations: []
+  alertmanagerFiles:
+    alertmanager.yml:
+      global: {}
+      receivers:
+      - name: default-receiver
+      route:
+        group_interval: 5m
+        group_wait: 10s
+        receiver: default-receiver
+        repeat_interval: 3h
+  configmapReload:
+    extraArgs: {}
+    extraConfigmapMounts: []
+    extraVolumeDirs: []
+    image:
+      pullPolicy: IfNotPresent
+      repository: jimmidyson/configmap-reload
+      tag: v0.2.2
+    name: configmap-reload
+    resources: {}
+  extraScrapeConfigs: null
+  global: {}
+  imagePullSecrets: null
+  initChownData:
+    enabled: true
+    image:
+      pullPolicy: IfNotPresent
+      repository: busybox
+      tag: latest
+    name: init-chown-data
+    resources: {}
+  kubeStateMetrics:
+    args: {}
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      repository: quay.io/coreos/kube-state-metrics
+      tag: v1.5.0
+    name: kube-state-metrics
+    nodeSelector: {}
+    pod:
+      labels: {}
+    podAnnotations: {}
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
+    securityContext: {}
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+      clusterIP: None
+      externalIPs: []
+      labels: {}
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 80
+      type: ClusterIP
+    tolerations: []
+  networkPolicy:
+    enabled: false
+  nodeExporter:
+    enabled: false
+    extraArgs: {}
+    extraConfigmapMounts: []
+    extraHostPathMounts: []
+    hostNetwork: true
+    hostPID: true
+    image:
+      pullPolicy: IfNotPresent
+      repository: prom/node-exporter
+      tag: v0.17.0
+    name: node-exporter
+    nodeSelector: {}
+    pod:
+      labels: {}
+    podAnnotations: {}
+    podSecurityPolicy:
+      annotations: {}
+      enabled: false
+    priorityClassName: ""
+    resources: {}
+    securityContext: {}
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+      clusterIP: None
+      externalIPs: []
+      hostPort: 9100
+      labels: {}
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 9100
+      type: ClusterIP
+    tolerations: []
+    updateStrategy:
+      type: RollingUpdate
+  pushgateway:
+    enabled: true
+    extraArgs: {}
+    image:
+      pullPolicy: IfNotPresent
+      repository: prom/pushgateway
+      tag: v0.6.0
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      enabled: true
+      hosts:
+      - pushgateway.domain.com
+      tls: []
+    name: pushgateway
+    nodeSelector: {}
+    podAnnotations: {}
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
+    securityContext: {}
+    service:
+      annotations:
+        prometheus.io/probe: pushgateway
+      clusterIP: ""
+      externalIPs: []
+      labels: {}
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 9091
+      type: ClusterIP
+    tolerations: []
+  rbac:
+    create: true
+  server:
+    affinity: {}
+    baseURL: ""
+    configMapOverrideName: ""
+    configPath: /etc/config/prometheus.yml
+    enableAdminApi: false
+    env: {}
+    extraArgs: {}
+    extraConfigmapMounts: []
+    extraHostPathMounts: []
+    extraSecretMounts: []
+    extraVolumeMounts: []
+    extraVolumes: []
+    global:
+      evaluation_interval: 1m
+      scrape_interval: 1m
+      scrape_timeout: 10s
+    image:
+      pullPolicy: IfNotPresent
+      repository: prom/prometheus
+      tag: v2.7.1
+    ingress:
+      annotations: {}
+      enabled: false
+      extraLabels: {}
+      hosts: []
+      tls: []
+    name: server
+    nodeSelector: {}
+    persistentVolume:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      enabled: true
+      existingClaim: ""
+      mountPath: /data
+      size: 8Gi
+      subPath: ""
+    podAnnotations: {}
+    prefixURL: ""
+    priorityClassName: ""
+    replicaCount: 1
+    resources: {}
+    retention: ""
+    securityContext: {}
+    service:
+      annotations: {}
+      clusterIP: ""
+      externalIPs: []
+      labels: {}
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 80
+      type: ClusterIP
+    sidecarContainers: null
+    statefulSet:
+      annotations: {}
+      enabled: true
+      headless:
+        annotations: {}
+        labels: {}
+        servicePort: 80
+      podManagementPolicy: OrderedReady
+    terminationGracePeriodSeconds: 300
+    tolerations: []
+  serverFiles:
+    alerts: {}
+    prometheus.yml:
+      rule_files:
+      - /etc/config/rules
+      - /etc/config/alerts
+      scrape_configs:
+      - job_name: prometheus
+        static_configs:
+        - targets:
+          - localhost:9090
+      - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        job_name: kubernetes-apiservers
+        kubernetes_sd_configs:
+        - role: endpoints
+        relabel_configs:
+        - action: keep
+          regex: default;kubernetes;https
+          source_labels:
+          - __meta_kubernetes_namespace
+          - __meta_kubernetes_service_name
+          - __meta_kubernetes_endpoint_port_name
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          insecure_skip_verify: true
+      - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        job_name: kubernetes-nodes
+        kubernetes_sd_configs:
+        - role: node
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - replacement: kubernetes.default.svc:443
+          target_label: __address__
+        - regex: (.+)
+          replacement: /api/v1/nodes/$1/proxy/metrics
+          source_labels:
+          - __meta_kubernetes_node_name
+          target_label: __metrics_path__
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          insecure_skip_verify: true
+      - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        job_name: kubernetes-nodes-cadvisor
+        kubernetes_sd_configs:
+        - role: node
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - replacement: kubernetes.default.svc:443
+          target_label: __address__
+        - regex: (.+)
+          replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+          source_labels:
+          - __meta_kubernetes_node_name
+          target_label: __metrics_path__
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          insecure_skip_verify: true
+      - job_name: kubernetes-service-endpoints
+        kubernetes_sd_configs:
+        - role: endpoints
+        relabel_configs:
+        - action: keep
+          regex: true
+          source_labels:
+          - __meta_kubernetes_service_annotation_prometheus_io_scrape
+        - action: replace
+          regex: (https?)
+          source_labels:
+          - __meta_kubernetes_service_annotation_prometheus_io_scheme
+          target_label: __scheme__
+        - action: replace
+          regex: (.+)
+          source_labels:
+          - __meta_kubernetes_service_annotation_prometheus_io_path
+          target_label: __metrics_path__
+        - action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          source_labels:
+          - __address__
+          - __meta_kubernetes_service_annotation_prometheus_io_port
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - action: replace
+          source_labels:
+          - __meta_kubernetes_namespace
+          target_label: kubernetes_namespace
+        - action: replace
+          source_labels:
+          - __meta_kubernetes_service_name
+          target_label: kubernetes_name
+        - action: replace
+          source_labels:
+          - __meta_kubernetes_pod_node_name
+          target_label: kubernetes_node
+      - honor_labels: true
+        job_name: prometheus-pushgateway
+        kubernetes_sd_configs:
+        - role: service
+        relabel_configs:
+        - action: keep
+          regex: pushgateway
+          source_labels:
+          - __meta_kubernetes_service_annotation_prometheus_io_probe
+      - job_name: kubernetes-services
+        kubernetes_sd_configs:
+        - role: service
+        metrics_path: /probe
+        params:
+          module:
+          - http_2xx
+        relabel_configs:
+        - action: keep
+          regex: true
+          source_labels:
+          - __meta_kubernetes_service_annotation_prometheus_io_probe
+        - source_labels:
+          - __address__
+          target_label: __param_target
+        - replacement: blackbox
+          target_label: __address__
+        - source_labels:
+          - __param_target
+          target_label: instance
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - source_labels:
+          - __meta_kubernetes_namespace
+          target_label: kubernetes_namespace
+        - source_labels:
+          - __meta_kubernetes_service_name
+          target_label: kubernetes_name
+      - job_name: kubernetes-pods
+        kubernetes_sd_configs:
+        - role: pod
+        relabel_configs:
+        - action: keep
+          regex: true
+          source_labels:
+          - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+        - action: replace
+          regex: (.+)
+          source_labels:
+          - __meta_kubernetes_pod_annotation_prometheus_io_path
+          target_label: __metrics_path__
+        - action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          source_labels:
+          - __address__
+          - __meta_kubernetes_pod_annotation_prometheus_io_port
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+        - action: replace
+          source_labels:
+          - __meta_kubernetes_namespace
+          target_label: kubernetes_namespace
+        - action: replace
+          source_labels:
+          - __meta_kubernetes_pod_name
+          target_label: kubernetes_pod_name
+    rules: {}
+  serviceAccounts:
+    alertmanager:
+      create: true
+      name: null
+    kubeStateMetrics:
+      create: true
+      name: null
+    nodeExporter:
+      create: true
+      name: null
+    pushgateway:
+      create: true
+      name: null
+    server:
+      create: true
+      name: null
+redis-ha:
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: {{ template "redis-ha.name" . }}
+              release: {{ .Release.Name }}
+          topologyKey: kubernetes.io/hostname
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app:  {{ template "redis-ha.name" . }}
+                release: {{ .Release.Name }}
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+  auth: false
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: redis
+    tag: 5.0.3-alpine
+  init:
+    resources: {}
+  persistentVolume:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    enabled: true
+    size: 10Gi
+  podDisruptionBudget: {}
+  redis:
+    config:
+      maxmemory: "0"
+      maxmemory-policy: volatile-lru
+      min-slaves-max-lag: 5
+      min-slaves-to-write: 1
+      rdbchecksum: "yes"
+      rdbcompression: "yes"
+      repl-diskless-sync: "yes"
+      save: 900 1
+    masterGroupName: mymaster
+    port: 6379
+    resources: {}
+  replicas: 2
+  securityContext:
+    fsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+  sentinel:
+    config:
+      down-after-milliseconds: 10000
+      failover-timeout: 180000
+      parallel-syncs: 5
+    port: 26379
+    quorum: 2
+    resources: {}
+replicaCount: 2
+resources: {}
+service:
+  port: 80
+  type: ClusterIP
+tolerations: []
+
+HOOKS:
+---
+# test-b-mytest-test-connection
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "test-b-mytest-test-connection"
+  labels:
+    app.kubernetes.io/name: mytest
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/instance: test-b
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['test-b-mytest:80']
+  restartPolicy: Never
+---
+# test-b-redis-ha-configmap-test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-b-redis-ha-configmap-test
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-b"
+    chart: redis-ha-3.1.3
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: check-init
+    image: koalaman/shellcheck:v0.5.0
+    args:
+    - --shell=sh
+    - /readonly-config/init.sh
+    volumeMounts:
+    - name: config
+      mountPath: /readonly-config
+      readOnly: true
+  - name: check-probes
+    image: koalaman/shellcheck:v0.5.0
+    args:
+    - --shell=sh
+    - /probes/check-quorum.sh
+    volumeMounts:
+    - name: probes
+      mountPath: /probes
+      readOnly: true
+  volumes:
+  - name: config
+    configMap:
+      name: test-b-redis-ha-configmap
+  - name: probes
+    configMap:
+      name: test-b-redis-ha-probes
+  restartPolicy: Never
+---
+# test-b-cockroachdb-test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "test-b-cockroachdb-test"
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: "client-test"
+    image: "cockroachdb/cockroach:v2.1.4"
+    imagePullPolicy: "Always"
+    command:
+      - "/cockroach/cockroach"
+      - "sql"
+      - "--insecure"
+      - "--host"
+      - "test-b-cockroachdb-public.mytest"
+      - "--port"
+      - "26257"
+      - "-e"
+      - "SHOW DATABASES;"
+  restartPolicy: Never
+---
+# test-b-redis-ha-service-test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-b-redis-ha-service-test
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-b"
+    chart: redis-ha-3.1.3
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: "test-b-service-test"
+    image: redis:5.0.3-alpine
+    command:
+      - sh
+      - -c
+      - redis-cli -h test-b-redis-ha -p 6379 info server
+  restartPolicy: Never
+MANIFEST:
+
+---
+# Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: "test-b-cockroachdb-budget"
+  labels:
+    heritage: "Tiller"
+    release: "test-b"
+    chart: "cockroachdb-2.0.10"
+    component: "test-b-cockroachdb"
+spec:
+  selector:
+    matchLabels:
+      component: "test-b-cockroachdb"
+  maxUnavailable: 1
+---
+# Source: mytest/charts/nginx-ingress/templates/controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "controller"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-controller
+data:
+  enable-vts-status: "true"
+---
+# Source: mytest/charts/prometheus/templates/alertmanager-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-alertmanager
+data:
+  alertmanager.yml: |
+    global: {}
+    receivers:
+    - name: default-receiver
+    route:
+      group_interval: 5m
+      group_wait: 10s
+      receiver: default-receiver
+      repeat_interval: 3h
+---
+# Source: mytest/charts/prometheus/templates/server-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server
+data:
+  alerts: |
+    {}
+    
+  prometheus.yml: |
+    global:
+      evaluation_interval: 1m
+      scrape_interval: 1m
+      scrape_timeout: 10s
+    rule_files:
+    - /etc/config/rules
+    - /etc/config/alerts
+    scrape_configs:
+    - job_name: prometheus
+      static_configs:
+      - targets:
+        - localhost:9090
+    - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      job_name: kubernetes-apiservers
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: default;kubernetes;https
+        source_labels:
+        - __meta_kubernetes_namespace
+        - __meta_kubernetes_service_name
+        - __meta_kubernetes_endpoint_port_name
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecure_skip_verify: true
+    - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      job_name: kubernetes-nodes
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - replacement: kubernetes.default.svc:443
+        target_label: __address__
+      - regex: (.+)
+        replacement: /api/v1/nodes/$1/proxy/metrics
+        source_labels:
+        - __meta_kubernetes_node_name
+        target_label: __metrics_path__
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecure_skip_verify: true
+    - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      job_name: kubernetes-nodes-cadvisor
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - replacement: kubernetes.default.svc:443
+        target_label: __address__
+      - regex: (.+)
+        replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+        source_labels:
+        - __meta_kubernetes_node_name
+        target_label: __metrics_path__
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecure_skip_verify: true
+    - job_name: kubernetes-service-endpoints
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (https?)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scheme
+        target_label: __scheme__
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: kubernetes_namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_service_name
+        target_label: kubernetes_name
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: kubernetes_node
+    - honor_labels: true
+      job_name: prometheus-pushgateway
+      kubernetes_sd_configs:
+      - role: service
+      relabel_configs:
+      - action: keep
+        regex: pushgateway
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_probe
+    - job_name: kubernetes-services
+      kubernetes_sd_configs:
+      - role: service
+      metrics_path: /probe
+      params:
+        module:
+        - http_2xx
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_probe
+      - source_labels:
+        - __address__
+        target_label: __param_target
+      - replacement: blackbox
+        target_label: __address__
+      - source_labels:
+        - __param_target
+        target_label: instance
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - source_labels:
+        - __meta_kubernetes_namespace
+        target_label: kubernetes_namespace
+      - source_labels:
+        - __meta_kubernetes_service_name
+        target_label: kubernetes_name
+    - job_name: kubernetes-pods
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: kubernetes_namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: kubernetes_pod_name
+    
+    alerting:
+      alertmanagers:
+      - kubernetes_sd_configs:
+          - role: pod
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace]
+          regex: mytest
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          regex: prometheus
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: alertmanager
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_container_port_number]
+          regex:
+          action: drop
+  rules: |
+    {}
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-b-redis-ha-configmap
+  labels:
+    heritage: Tiller
+    release: test-b
+    chart: redis-ha-3.1.3
+    app: test-b-redis-ha
+data:
+  redis.conf: |
+    dir "/data"
+    maxmemory 0
+    maxmemory-policy volatile-lru
+    min-slaves-max-lag 5
+    min-slaves-to-write 1
+    rdbchecksum yes
+    rdbcompression yes
+    repl-diskless-sync yes
+    save 900 1
+
+  sentinel.conf: |
+    dir "/data"
+    sentinel down-after-milliseconds mymaster 10000
+    sentinel failover-timeout mymaster 180000
+    sentinel parallel-syncs mymaster 5
+
+  init.sh: |
+    HOSTNAME="$(hostname)"
+    INDEX="${HOSTNAME##*-}"
+    MASTER="$(redis-cli -h test-b-redis-ha -p 26379 sentinel get-master-addr-by-name mymaster | grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
+    MASTER_GROUP="mymaster"
+    QUORUM="2"
+    REDIS_CONF=/data/conf/redis.conf
+    REDIS_PORT=6379
+    SENTINEL_CONF=/data/conf/sentinel.conf
+    SENTINEL_PORT=26379
+    SERVICE=test-b-redis-ha
+    set -eu
+
+    sentinel_update() {
+        echo "Updating sentinel config"
+        sed -i "1s/^/$(cat sentinel-id)\\n/" "$SENTINEL_CONF"
+        sed -i "2s/^/sentinel monitor $MASTER_GROUP $1 $REDIS_PORT $QUORUM \\n/" "$SENTINEL_CONF"
+        echo "sentinel announce-ip $ANNOUNCE_IP" >> $SENTINEL_CONF
+        echo "sentinel announce-port $SENTINEL_PORT" >> $SENTINEL_CONF
+    }
+
+    redis_update() {
+        echo "Updating redis config"
+        echo "slaveof $1 $REDIS_PORT" >> "$REDIS_CONF"
+        echo "slave-announce-ip $ANNOUNCE_IP" >> $REDIS_CONF
+        echo "slave-announce-port $REDIS_PORT" >> $REDIS_CONF
+    }
+
+    copy_config() {
+        if [ -f "$SENTINEL_CONF" ]; then
+            grep "sentinel myid" "$SENTINEL_CONF" > sentinel-id || true
+        fi
+        cp /readonly-config/redis.conf "$REDIS_CONF"
+        cp /readonly-config/sentinel.conf "$SENTINEL_CONF"
+    }
+
+    setup_defaults() {
+        echo "Setting up defaults"
+        if [ "$INDEX" = "0" ]; then
+            echo "Setting this pod as the default master"
+            sed -i "s/^.*slaveof.*//" "$REDIS_CONF"
+            sentinel_update "$ANNOUNCE_IP"
+        else
+            DEFAULT_MASTER="$(getent hosts "$SERVICE-announce-0" | awk '{ print $1 }')"
+            if [ -z "$DEFAULT_MASTER" ]; then
+                echo "Unable to resolve host"
+                exit 1
+            fi
+            echo "Setting default slave config.."
+            redis_update "$DEFAULT_MASTER"
+            sentinel_update "$DEFAULT_MASTER"
+        fi
+    }
+
+    find_master() {
+        echo "Attempting to find master"
+        if [ "$(redis-cli -h "$MASTER" ping)" != "PONG" ]; then
+           echo "Can't ping master, attempting to force failover"
+           if redis-cli -h "$SERVICE" -p "$SENTINEL_PORT" sentinel failover "$MASTER_GROUP" | grep -q 'NOGOODSLAVE' ; then 
+               setup_defaults
+               return 0
+           fi
+           sleep 10
+           MASTER="$(redis-cli -h $SERVICE -p $SENTINEL_PORT sentinel get-master-addr-by-name $MASTER_GROUP | grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
+           if [ "$MASTER" ]; then
+               sentinel_update "$MASTER"
+               redis_update "$MASTER"
+           else
+              echo "Could not failover, exiting..."
+              exit 1
+           fi
+        else
+            echo "Found reachable master, updating config"
+            sentinel_update "$MASTER"
+            redis_update "$MASTER"
+        fi
+    }
+
+    mkdir -p /data/conf/
+
+    echo "Initializing config.."
+    copy_config
+
+    ANNOUNCE_IP=$(getent hosts "$SERVICE-announce-$INDEX" | awk '{ print $1 }')
+    if [ -z "$ANNOUNCE_IP" ]; then
+        "Could not resolve the announce ip for this pod"
+        exit 1
+    elif [ "$MASTER" ]; then
+        find_master
+    else
+        setup_defaults
+    fi
+
+    if [ "${AUTH:-}" ]; then
+        echo "Setting auth values"
+        sed -i "s/replace-default-auth/$AUTH/" "$REDIS_CONF" "$SENTINEL_CONF"
+    fi
+
+    echo "Ready..."
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-healthchecks.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-b-redis-ha-probes
+  labels:
+    heritage: Tiller
+    release: test-b
+    chart: redis-ha-3.1.3
+    app: test-b-redis-ha
+data:
+  check-quorum.sh: |
+    #!/bin/sh
+    set -eu
+    MASTER_GROUP="mymaster"
+    SENTINEL_PORT=26379
+    REDIS_PORT=6379
+    NUM_SLAVES=$(redis-cli -p "$SENTINEL_PORT" sentinel master mymaster | awk '/num-slaves/{getline; print}')
+    MIN_SLAVES=1
+
+    if [ "$1" = "$SENTINEL_PORT" ]; then
+        if redis-cli -p "$SENTINEL_PORT" sentinel ckquorum "$MASTER_GROUP" | grep -q NOQUORUM ; then
+            echo "ERROR: NOQUORUM. Sentinel quorum check failed, not enough sentinels found"
+            exit 1
+        fi
+    elif [ "$1" = "$REDIS_PORT" ]; then
+        if [ "$MIN_SLAVES" -gt "$NUM_SLAVES" ]; then
+            echo "Could not find enough replicating slaves. Needed $MIN_SLAVES but found $NUM_SLAVES"
+            exit 1
+        fi
+    fi
+    sh /probes/readiness.sh "$1"
+
+  readiness.sh: |
+    #!/bin/sh
+    set -eu
+    CHECK_SERVER="$(redis-cli -p "$1" ping)"
+
+    if [ "$CHECK_SERVER" != "PONG" ]; then
+        echo "Server check failed with: $CHECK_SERVER"
+        exit 1
+    fi
+---
+# Source: mytest/templates/configmap.yaml
+# This is a simple example of using a config map to create a single page static site.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-b-mytest-special-config-backend
+  labels:
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/instance: test-b
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/name: mytest
+data:
+  # When the config map is mounted as a volume, these will be created as files.
+  config.toml: |
+    [alias]
+    redis=test-b-redis-ha:6379
+    cockroach=test-b-cockroachdb:26257
+---
+# Source: mytest/charts/hpa-operator/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: test-b-hpa-operator
+  labels:
+    chart: "hpa-operator-0.0.7"
+    app: "test-b-hpa-operator"
+    heritage: "Tiller"
+    release: "test-b"
+---
+# Source: mytest/charts/nginx-ingress/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress
+---
+# Source: mytest/charts/prometheus/templates/alertmanager-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-alertmanager
+---
+# Source: mytest/charts/prometheus/templates/pushgateway-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    component: "pushgateway"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-pushgateway
+---
+# Source: mytest/charts/prometheus/templates/server-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server
+---
+# Source: mytest/charts/hpa-operator/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: test-b-hpa-operator
+  labels:
+    chart: "hpa-operator-0.0.7"
+    app: "test-b-hpa-operator"
+    heritage: "Tiller"
+    release: "test-b"
+rules:
+- apiGroups:
+  - banzaicloud.com
+  resources:
+  - "*"
+  verbs:
+  - "*"
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - events
+  verbs:
+  - "*"
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - daemonsets
+  - replicasets
+  - statefulsets
+  verbs:
+  - "*"
+- apiGroups:
+  - autoscaling
+  resources:
+  - '*'
+  verbs:
+  - '*'
+---
+# Source: mytest/charts/nginx-ingress/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - nodes
+      - pods
+      - secrets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - update
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+---
+# Source: mytest/charts/prometheus/templates/server-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+      - ingresses
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - get
+---
+# Source: mytest/charts/hpa-operator/templates/rbac.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: test-b-hpa-operator
+  labels:
+    chart: "hpa-operator-0.0.7"
+    app: "test-b-hpa-operator"
+    heritage: "Tiller"
+    release: "test-b"
+subjects:
+- kind: ServiceAccount
+  name: test-b-hpa-operator
+  namespace: mytest
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: test-b-hpa-operator
+---
+# Source: mytest/charts/nginx-ingress/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: test-b-nginx-ingress
+subjects:
+  - kind: ServiceAccount
+    name: test-b-nginx-ingress
+    namespace: mytest
+---
+# Source: mytest/charts/prometheus/templates/server-clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server
+subjects:
+  - kind: ServiceAccount
+    name: test-b-prometheus-server
+    namespace: mytest
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: test-b-prometheus-server
+---
+# Source: mytest/charts/nginx-ingress/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - pods
+      - secrets
+      - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - update
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      - ingress-controller-leader-nginx
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+    verbs:
+      - create
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+---
+# Source: mytest/charts/nginx-ingress/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: test-b-nginx-ingress
+subjects:
+  - kind: ServiceAccount
+    name: test-b-nginx-ingress
+    namespace: mytest
+---
+# Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  # This service is meant to be used by clients of the database. It exposes a ClusterIP that will
+  # automatically load balance connections to the different database pods.
+  name: "test-b-cockroachdb-public"
+  annotations:
+    {}
+    
+  labels:
+    heritage: "Tiller"
+    release: "test-b"
+    chart: "cockroachdb-2.0.10"
+    component: "test-b-cockroachdb"
+spec:
+  type: ClusterIP
+  ports:
+  # The main port, served by gRPC, serves Postgres-flavor SQL, internode
+  # traffic and the cli.
+  - port: 26257
+    targetPort: 26257
+    name: grpc
+  # The secondary port serves the UI as well as health and debug endpoints.
+  - port: 8080
+    targetPort: 8080
+    name: http
+  selector:
+    component: "test-b-cockroachdb"
+---
+# Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  # This service only exists to create DNS entries for each pod in the stateful
+  # set such that they can resolve each other's IP addresses. It does not
+  # create a load-balanced ClusterIP and should not be used directly by clients
+  # in most circumstances.
+  name: "test-b-cockroachdb"
+  labels:
+    heritage: "Tiller"
+    release: "test-b"
+    chart: "cockroachdb-2.0.10"
+    component: "test-b-cockroachdb"
+  annotations:
+    # Use this annotation in addition to the actual field below because the
+    # annotation will stop being respected soon but the field is broken in
+    # some versions of Kubernetes:
+    # https://github.com/kubernetes/kubernetes/issues/58662
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+    # Enable automatic monitoring of all instances when Prometheus is running in the cluster.
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "_status/vars"
+    prometheus.io/port: "8080"
+spec:
+  ports:
+  - port: 26257
+    targetPort: 26257
+    name: grpc
+  # The secondary port serves the UI as well as health and debug endpoints.
+  - port: 8080
+    targetPort: 8080
+    name: http
+  # We want all pods in the StatefulSet to have their addresses published for
+  # the sake of the other CockroachDB pods even before they're ready, since they
+  # have to be able to talk to each other in order to become ready.
+  publishNotReadyAddresses: true
+  clusterIP: None
+  selector:
+    component: "test-b-cockroachdb"
+---
+# Source: mytest/charts/nginx-ingress/templates/controller-metrics-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "controller"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-controller-metrics
+spec:
+  clusterIP: ""
+  ports:
+    - name: metrics
+      port: 9913
+      targetPort: metrics
+  selector:
+    app: nginx-ingress
+    component: "controller"
+    release: test-b
+  type: "ClusterIP"
+---
+# Source: mytest/charts/nginx-ingress/templates/controller-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "controller"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-controller
+spec:
+  clusterIP: ""
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+  selector:
+    app: nginx-ingress
+    component: "controller"
+    release: test-b
+  type: "LoadBalancer"
+---
+# Source: mytest/charts/nginx-ingress/templates/controller-stats-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "controller"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-controller-stats
+spec:
+  clusterIP: ""
+  ports:
+    - name: stats
+      port: 18080
+      targetPort: stats
+  selector:
+    app: nginx-ingress
+    component: "controller"
+    release: test-b
+  type: "ClusterIP"
+---
+# Source: mytest/charts/nginx-ingress/templates/default-backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "default-backend"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-default-backend
+spec:
+  clusterIP: ""
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: nginx-ingress
+    component: "default-backend"
+    release: test-b
+  type: "ClusterIP"
+---
+# Source: mytest/charts/prometheus/templates/alertmanager-service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-alertmanager-headless
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9093
+  selector:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+---
+# Source: mytest/charts/prometheus/templates/alertmanager-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-alertmanager
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9093
+  selector:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+  type: "ClusterIP"
+---
+# Source: mytest/charts/prometheus/templates/pushgateway-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/probe: pushgateway
+    
+  labels:
+    component: "pushgateway"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-pushgateway
+spec:
+  ports:
+    - name: http
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+  selector:
+    component: "pushgateway"
+    app: prometheus
+    release: test-b
+  type: "ClusterIP"
+---
+# Source: mytest/charts/prometheus/templates/server-service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server-headless
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9090
+  selector:
+    component: "server"
+    app: prometheus
+    release: test-b
+---
+# Source: mytest/charts/prometheus/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9090
+  selector:
+    component: "server"
+    app: prometheus
+    release: test-b
+  type: "ClusterIP"
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-announce-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-b-redis-ha-announce-1
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-b"
+    chart: redis-ha-3.1.3
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  publishNotReadyAddresses: true
+  type: ClusterIP
+  ports:
+  - name: server
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  - name: sentinel
+    port: 26379
+    protocol: TCP
+    targetPort: sentinel
+  selector:
+    release: test-b
+    app: redis-ha
+    "statefulset.kubernetes.io/pod-name": test-b-redis-ha-server-1
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-announce-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-b-redis-ha-announce-0
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-b"
+    chart: redis-ha-3.1.3
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  publishNotReadyAddresses: true
+  type: ClusterIP
+  ports:
+  - name: server
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  - name: sentinel
+    port: 26379
+    protocol: TCP
+    targetPort: sentinel
+  selector:
+    release: test-b
+    app: redis-ha
+    "statefulset.kubernetes.io/pod-name": test-b-redis-ha-server-0
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-b-redis-ha
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-b"
+    chart: redis-ha-3.1.3
+  annotations:
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: server
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  - name: sentinel
+    port: 26379
+    protocol: TCP
+    targetPort: sentinel
+  selector:
+    release: test-b
+    app: redis-ha
+---
+# Source: mytest/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-b-mytest
+  labels:
+    app.kubernetes.io/name: mytest
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/instance: test-b
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: mytest
+    app.kubernetes.io/instance: test-b
+---
+# Source: mytest/charts/hpa-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-b-hpa-operator
+  labels:
+    chart: "hpa-operator-0.0.7"
+    app: "test-b-hpa-operator"
+    heritage: "Tiller"
+    release: "test-b"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "test-b-hpa-operator"
+  template:
+    metadata:
+      labels:
+        chart: "hpa-operator-0.0.7"
+        app: test-b-hpa-operator
+        heritage: "Tiller"
+        release: "test-b"
+    spec:
+
+      serviceAccountName: test-b-hpa-operator
+
+      containers:
+      - name: hpa-operator
+        image: "banzaicloud/hpa-operator:0.1.4"
+        imagePullPolicy: IfNotPresent
+        command:
+        - hpa-operator
+        resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+---
+# Source: mytest/charts/nginx-ingress/templates/controller-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "controller"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-controller
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    {}
+    
+  minReadySeconds: 0
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress
+        component: "controller"
+        release: test-b
+    spec:
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: nginx-ingress-controller
+          image: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.22.0"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - /nginx-ingress-controller
+            - --default-backend-service=mytest/test-b-nginx-ingress-default-backend
+            - --election-id=ingress-controller-leader
+            - --ingress-class=nginx
+            - --configmap=mytest/test-b-nginx-ingress-controller
+          securityContext:
+            capabilities:
+                drop:
+                - ALL
+                add:
+                - NET_BIND_SERVICE
+            runAsUser: 33
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: stats
+              containerPort: 18080
+              protocol: TCP
+            - name: metrics
+              containerPort: 10254
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            
+      hostNetwork: false
+      serviceAccountName: test-b-nginx-ingress
+      terminationGracePeriodSeconds: 60
+---
+# Source: mytest/charts/nginx-ingress/templates/default-backend-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "default-backend"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-default-backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress
+        component: "default-backend"
+        release: test-b
+    spec:
+      containers:
+        - name: nginx-ingress-default-backend
+          image: "k8s.gcr.io/defaultbackend:1.4"
+          imagePullPolicy: "IfNotPresent"
+          args:
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {}
+            
+      terminationGracePeriodSeconds: 60
+---
+# Source: mytest/charts/prometheus/templates/pushgateway-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    component: "pushgateway"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-pushgateway
+spec:
+  selector:
+    matchLabels:
+      component: "pushgateway"
+      app: prometheus
+      release: test-b
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: "pushgateway"
+        app: prometheus
+        release: test-b
+        chart: prometheus-8.6.1
+        heritage: Tiller
+    spec:
+      serviceAccountName: test-b-prometheus-pushgateway
+      containers:
+        - name: prometheus-pushgateway
+          image: "prom/pushgateway:v0.6.0"
+          imagePullPolicy: "IfNotPresent"
+          args:
+          ports:
+            - containerPort: 9091
+          readinessProbe:
+            httpGet:
+              path: /#/status
+              port: 9091
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+          resources:
+            {}
+---
+# Source: mytest/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-b-mytest
+  labels:
+    app.kubernetes.io/name: mytest
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/instance: test-b
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mytest
+      app.kubernetes.io/instance: test-b
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mytest
+        app.kubernetes.io/instance: test-b
+    spec:
+      volumes:
+      - name: config-volume-backend
+        configMap:
+          # Provide the name of the ConfigMap containing the files you want
+          # to add to the container
+          name: test-b-mytest-special-config-backend
+      containers:
+        - name: mytest
+          image: "nginx:stable"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+---
+# Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: "test-b-cockroachdb"
+spec:
+  serviceName: "test-b-cockroachdb"
+  replicas: 3
+  selector:
+    matchLabels:
+      heritage: "Tiller"
+      release: "test-b"
+      component: "test-b-cockroachdb"
+  template:
+    metadata:
+      labels:
+        heritage: "Tiller"
+        release: "test-b"
+        chart: "cockroachdb-2.0.10"
+        component: "test-b-cockroachdb"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: component
+                  operator: In
+                  values:
+                  - "test-b-cockroachdb"
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: "test-b-cockroachdb"
+        image: "cockroachdb/cockroach:v2.1.4"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 26257
+          name: grpc
+        - containerPort: 8080
+          name: http
+        livenessProbe:
+          httpGet:
+            path: "/health"
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: "/health?ready=1"
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 2
+        resources:
+          {}
+          
+        env:
+        - name: STATEFULSET_NAME
+          value: "test-b-cockroachdb"
+        - name: STATEFULSET_FQDN
+          value: "test-b-cockroachdb.mytest.svc.cluster.local"
+        - name: COCKROACH_CHANNEL
+          value: kubernetes-helm
+        volumeMounts:
+        - name: datadir
+          mountPath: /cockroach/cockroach-data
+        command:
+          - "/bin/bash"
+          - "-ecx"
+            # The use of qualified `hostname -f` is crucial:
+            # Other nodes aren't able to look up the unqualified hostname.
+          - "exec /cockroach/cockroach start --logtostderr --insecure --advertise-host $(hostname).${STATEFULSET_FQDN} --http-host 0.0.0.0 --http-port 8080 --port 26257 --cache 25% --max-sql-memory 25%  --join ${STATEFULSET_NAME}-0.${STATEFULSET_FQDN}:26257,${STATEFULSET_NAME}-1.${STATEFULSET_FQDN}:26257,${STATEFULSET_NAME}-2.${STATEFULSET_FQDN}:26257"
+      # No pre-stop hook is required, a SIGTERM plus some time is all that's
+      # needed for graceful shutdown of a node.
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: datadir
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "100Gi"
+---
+# Source: mytest/charts/prometheus/templates/alertmanager-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-alertmanager
+spec:
+  serviceName: test-b-prometheus-alertmanager-headless
+  selector:
+    matchLabels:
+      component: "alertmanager"
+      app: prometheus
+      release: test-b
+  replicas: 1
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        component: "alertmanager"
+        app: prometheus
+        release: test-b
+        chart: prometheus-8.6.1
+        heritage: Tiller
+    spec:
+      serviceAccountName: test-b-prometheus-alertmanager
+      containers:
+        - name: prometheus-alertmanager
+          image: "prom/alertmanager:v0.15.3"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          args:
+            - --config.file=/etc/config/alertmanager.yml
+            - --storage.path=/data
+            - --cluster.advertise-address=$(POD_IP):6783
+            - --web.external-url=/
+
+          ports:
+            - containerPort: 9093
+          readinessProbe:
+            httpGet:
+              path: /#/status
+              port: 9093
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            {}
+            
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: "/data"
+              subPath: ""
+        - name: prometheus-alertmanager-configmap-reload
+          image: "jimmidyson/configmap-reload:v0.2.2"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://localhost:9093/-/reload
+          resources:
+            {}
+            
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: test-b-prometheus-alertmanager
+  volumeClaimTemplates:
+    - metadata:
+        name: storage-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+          
+        resources:
+          requests:
+            storage: "2Gi"
+---
+# Source: mytest/charts/prometheus/templates/server-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-server
+spec:
+  serviceName: test-b-prometheus-server-headless
+  selector:
+    matchLabels:
+      component: "server"
+      app: prometheus
+      release: test-b
+  replicas: 1
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        component: "server"
+        app: prometheus
+        release: test-b
+        chart: prometheus-8.6.1
+        heritage: Tiller
+    spec:
+      serviceAccountName: test-b-prometheus-server
+      initContainers:
+      - name: "init-chown-data"
+        image: "busybox:latest"
+        imagePullPolicy: "IfNotPresent"
+        resources:
+            {}
+            
+        # 65534 is the nobody user that prometheus uses.
+        command: ["chown", "-R", "65534:65534", "/data"]
+        volumeMounts:
+        - name: storage-volume
+          mountPath: /data
+          subPath: ""
+      containers:
+        - name: prometheus-server-configmap-reload
+          image: "jimmidyson/configmap-reload:v0.2.2"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://127.0.0.1:9090/-/reload
+          resources:
+            {}
+            
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+        - name: prometheus-server
+          image: "prom/prometheus:v2.7.1"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --config.file=/etc/config/prometheus.yml
+            - --storage.tsdb.path=/data
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --web.console.templates=/etc/prometheus/consoles
+            - --web.enable-lifecycle
+          ports:
+            - containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 9090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            {}
+            
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: /data
+              subPath: ""
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: config-volume
+          configMap:
+            name: test-b-prometheus-server
+  volumeClaimTemplates:
+    - metadata:
+        name: storage-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+          
+        resources:
+          requests:
+            storage: "8Gi"
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: test-b-redis-ha-server
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-b"
+    chart: redis-ha-3.1.3
+spec:
+  selector:
+    matchLabels:
+      release: test-b
+      app: redis-ha
+  serviceName: test-b-redis-ha
+  replicas: 2
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/init-config: 6b3984dbc75788b14e37f5188e82a7aec7295930851eef7b59d897eb54040773
+        checksum/probe-config: 746a07b4e040cc8cdb8a78126b10212a4b56af96565ff2cd2e2e101820d6dd3e
+      labels:
+        release: test-b
+        app: redis-ha
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: redis-ha
+                  release: test-b
+              topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app:  redis-ha
+                    release: test-b
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+        
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        
+      initContainers:
+      - name: config-init
+        image: redis:5.0.3-alpine
+        imagePullPolicy: IfNotPresent
+        resources:
+          {}
+          
+        command:
+        - sh
+        args:
+        - /readonly-config/init.sh
+        volumeMounts:
+        - name: config
+          mountPath: /readonly-config
+          readOnly: true
+        - name: data
+          mountPath: /data
+      containers:
+      - name: redis
+        image: redis:5.0.3-alpine
+        imagePullPolicy: IfNotPresent
+        command:
+        - redis-server
+        args:
+        - /data/conf/redis.conf
+        livenessProbe:
+          exec:
+            command: [ "sh", "/probes/readiness.sh", "6379"]
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["sh", "/probes/readiness.sh", "6379"]
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        resources:
+          {}
+          
+        ports:
+        - name: redis
+          containerPort: 6379
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /probes
+          name: probes
+      - name: sentinel
+        image: redis:5.0.3-alpine
+        imagePullPolicy: IfNotPresent
+        command:
+          - redis-sentinel
+        args:
+          - /data/conf/sentinel.conf
+        livenessProbe:
+          exec:
+            command: [ "sh", "/probes/readiness.sh", "26379"]
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["sh", "/probes/readiness.sh", "26379"]
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        resources:
+          {}
+          
+        ports:
+          - name: sentinel
+            containerPort: 26379
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /probes
+          name: probes
+      volumes:
+      - name: config
+        configMap:
+          name: test-b-redis-ha-configmap
+      - name: probes
+        configMap:
+          name: test-b-redis-ha-probes
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "10Gi"
+---
+# Source: mytest/charts/cockroachdb/templates/cluster-init.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "test-b-cockroachdb-init"
+  labels:
+    heritage: "Tiller"
+    release: "test-b"
+    chart: "cockroachdb-2.0.10"
+spec:
+  template:
+    spec:
+      containers:
+      - name: cluster-init
+        image: "cockroachdb/cockroach:v2.1.4"
+        imagePullPolicy: "Always"
+        # Run the command in an `until` loop because this job is bound to come
+        # up before the cockroach pods (due to the time needed to get
+        # persistent volumes attached to nodes), and sleeping 5 seconds between
+        # attempts is much better than letting the pod fail when the init
+        # command does and waiting out Kubernetes' non-configurable exponential
+        # backoff for pod restarts.
+        command:
+          - "/bin/bash"
+          - "-ecx"
+          - "until /cockroach/cockroach init --insecure --host=test-b-cockroachdb-0.test-b-cockroachdb --port 26257; do sleep 5; done"
+      restartPolicy: OnFailure
+---
+# Source: mytest/charts/prometheus/templates/pushgateway-ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    
+  labels:
+    component: "pushgateway"
+    app: prometheus
+    release: test-b
+    chart: prometheus-8.6.1
+    heritage: Tiller
+  name: test-b-prometheus-pushgateway
+spec:
+  rules:
+    - host: pushgateway.domain.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: test-b-prometheus-pushgateway
+              servicePort: 9091
+---
+# Source: mytest/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-b-mytest
+  labels:
+    app.kubernetes.io/name: mytest
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/instance: test-b
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    
+spec:
+  rules:
+    - host: mytest.com
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: test-c-mytest
+              servicePort: 80
+    - host: prom.com
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: test-c-prometheus-server
+              servicePort: 80
+---
+# Source: mytest/charts/nginx-ingress/templates/controller-hpa.yaml
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-1.2.3
+    component: "controller"
+    heritage: Tiller
+    release: test-b
+  name: test-b-nginx-ingress-controller
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: test-b-nginx-ingress-controller
+  minReplicas: 1
+  maxReplicas: 11
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 50
