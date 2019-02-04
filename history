@@ -1,0 +1,501 @@
+  383  docker exec -ti kafka-single-node_kafka_1 /bin/bash
+  384  docker
+  385  docker stats postgres
+  386  docker stats broker
+  387  docker stats kafka_1
+  388  docker stats broker
+  389  docker ps -a
+  390  docker stats kafka-single-node_kafka_1
+  391  htop
+  392  brew install htop
+  393  htop
+  394  docker ps -a
+  395  docker start pgadmin4
+  396  docker ps -a
+  397  docker ps -a
+  398  cd ./code/locus
+  399  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  400  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  401  cd ./code/locus
+  402  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  403  reboot
+  404  sudo reboot
+  405  cd ./code/locus
+  406  locus -h
+  407  locust -h
+  408  locust -f loc_local.py --master --host=https://172.16.1.6:8050
+  409  locust -f loc_local.py --host=https://172.16.1.6:8050
+  410  locust -f loc_local.py --host=https://172.16.1.6:8050
+  411  vi loc_local.py 
+  412  locust -f loc_local.py --host=https://172.16.1.6:8050
+  413  vi loc_local.py 
+  414  locust -f loc_local.py --host=https://172.16.1.6:8050
+  415  locust -f loc_local.py --host=https://172.16.1.5:8050
+  416  locust -f loc_local.py --host=https://172.16.1.5:8050
+  417  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  418  ulimit -n
+  419  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  420  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  421  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  422  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  423  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  424  ifconfig
+  425  python3 -m pip freeze | grep grtevent
+  426  python3 -m pip freeze | grep getevent
+  427  python3 -m  pip install gevent-zeromq
+  428  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
+  429  locust -f loc_local.py --host=https://172.16.1.5:8050 
+  430  locust -f loc_local.py --slave --master=10.20.30.208
+  431  locust -f loc_local.py --slave --master-host=10.20.30.208
+  432  ip addr
+  433  ifconfig
+  434  ssh cyrille@192.168.0.243
+  435  docker ps
+  436  docker ps
+  437  docker ps
+  438  docker logs logstash
+  439  docker logs c8d3b988ddd0_logstash
+  440  docker logs -f c8d3b988ddd0_logstash
+  441  eocker restart c8d3b988ddd0_logstash
+  442  docker restart c8d3b988ddd0_logstash
+  443  docker logs -f c8d3b988ddd0_logstash
+  444  docker ps
+  445  docker logs logstash
+  446  docker logs filebeat
+  447  cat /var/lib/docker/containers/0240059ed3ff76b4fb7296f946e7a052730142c36597d2085819d5684694114b/0240059ed3ff76b4fb7296f946e7a052730142c36597d2085819d5684694114b-json.log
+  448  cat /var/lib/docker/containers/e321544bfa24fd3f1cc01e7f5b6e7dbd94169e0b08aa87e915adc4b1328000a0/e321544bfa24fd3f1cc01e7f5b6e7dbd94169e0b08aa87e915adc4b1328000a0-json.log
+  449  docker restart filebeat
+  450  docker logs logstash
+  451  docker restart filebeat
+  452  docker restart logstash
+  453  docker exec -ti logstash sh
+  454  docker restart logstash
+  455  docker restart logstash
+  456  docker restart logstash
+  457  docker exec -ti elasticsearch sh
+  458  docker-compose -f setup.yml up
+  459  docker-compose -f setup.yml up
+  460  docker-compose -f setup.yml up
+  461  docker-compose up logstash metricbeat
+  462  docker-compose up logstash filebeat
+  463  docker-compose up kibana logstash filebeat
+  464  docker-compose up elasticseach kibana logstash filebeat
+  465  docker-compose up elasticsearch kibana logstash filebeat
+  466  docker-compose up elasticsearch kibana logstash filebeat
+  467  docker-compose up elasticsearch kibana logstash filebeat
+  468  docker ps -a
+  469  docker container prune
+  470  docker-compose -f setup.yml up
+  471  docker-compose up
+  472  docker-compose up
+  473  docker-compose up
+  474  docker-compose -f setup.yml up
+  475  cd ../stack-docker3/
+  476  docker ps -a
+  477  docker ps
+  478  docker container prune
+  479  docker volumes ls
+  480  docker volume ls
+  481  docker volume 
+  482  docker volume prune
+  483  docker-compose --version
+  484  docker-compose -f setup.yml up
+  485  docker-compose up  elasticsearch kibana logstash
+  486  docker-compose up  elasticsearch kibana logstash
+  487  docker-compose down
+  488  docker volumes prune
+  489  docker ps
+  490  docker volume prune
+  491  docker container prune
+  492  docker-compose -f setup.yml up
+  493  docker-compose up  elasticsearch kibana logstash
+  494  cd ./code/
+  495  git clone https://github.com/villasv/aws-airflow-stack.git
+  496  man trap
+  497  man 2 trap
+  498  trap
+  499  trap --help
+  500  sudo find / -name *station*
+  501  brew update && brew install azure-cli
+  502  az login
+  503  az 
+  504  az resource
+  505  az resource list
+  506  az resource list | grep test
+  507  az get-credentials
+  508  az get-credential
+  509  az --help
+  510  az aks
+  511  az aks get-credential 
+  512  az aks get-credentials
+  513  az aks get-credentials --ressource-group test_ressource_group --name cluster-test
+  514  az aks get-credentials --resource-group test_ressource_group --name cluster-test
+  515  az aks get-credentials --resource-group test_ressource_group --name test-cluster
+  516  kubectl get nodes
+  517  cat /Users/thedmbp/.kube/config
+  518  brew install kubernetes-helm
+  519  kubectl config current-context
+  520  helm init
+  521  helm repo update
+  522  helm install
+  523  helm install --help
+  524  kubectl get ns
+  525  helm install --name my-release stable/cockroachdb --namespace cockroachdb
+  526  kubectl get svc
+  527  kubectl get ns
+  528  kubectl get svc
+  529  kubectl get svc --all
+  530* kubectl get --all sv
+  531  kubectl get svc -a
+  532  kubectl get --all-­nam­espaces  svc
+  533  kubectl get --all-­namespaces  svc
+  534  kubectl get   svc --all-namespaces=false
+  535  kubectl get   svc --all-namespaces=true
+  536  kubectl get   pod --all-namespaces=true
+  537  kubectl get   pv --all-namespaces=true
+  538  kubectl get    --all-namespaces=true
+  539  kubectl get 
+  540  kubectl get statefulset
+  541  kubectl get  statefulset  --all-namespaces=true
+  542  cd ./code/
+  543  mkdir k8s
+  544  -cd ./k8s/
+  545  helm create mytest
+  546  git clone https://github.com/helm/charts.git
+  547  helm
+  548  helm dependency
+  549  helm dependency list
+  550  cd k8s/
+  551  helm dependency list
+  552  ll
+  553  ls
+  554  cd ../mytest/
+  555  helm dependency list
+  556  helm dependency build
+  557  help
+  558  helm
+  559  helm dependency build
+  560  helm repo list
+  561  helm dependency list
+  562  helm dependency build
+  563  helm install --name my-release stable/nginx-ingress
+  564  helm ls --app 
+  565  helm ls --all
+  566  helm install --name my-release2 stable/nginx-ingress
+  567  kubectl status
+  568  kubectl get pod
+  569  kubectl get svc
+  570  kubectl get svc
+  571  helm dependency build
+  572  helm dependency update
+  573  heml repo
+  574  helm repo
+  575  helm repo list
+  576  helm repo remove local
+  577  helm dependency update
+  578  helm dependency update
+  579  helm dependency add stable/nginx-ingress
+  580  helm dependency add stable/nginx-ingress
+  581  ll
+  582  ll charts/
+  583  helm dependency update
+  584  helm repo list
+  585  helm search stable 
+  586  helm search stable  | nginx
+  587  helm search stable  | grep nginx
+  588  helm repo list
+  589  helm dep build
+  590  helm dep build
+  591   helm install --dry-run --debug .
+  592   helm install --dry-run --debug . | grep fuck
+  593   helm install --dry-run --debug . 
+  594  helm dep build
+  595  helm dep update
+  596  helm dep build
+  597   helm install --dry-run --debug . > debu.log
+  598   helm install --dry-run --debug . > debu.log
+  599   helm install --dry-run --debug . > debu.log
+  600   helm install --dry-run --debug . > debu.log
+  601   helm install --help
+  602   helm install --namespace mytest .
+  603   helm install --namespace mytest .
+  604   helm install --namespace mytest .
+  605  kubectl version
+  606  kubectl version
+  607  kubectl get nodes -o yaml
+  608   helm install --namespace mytest .
+  609   helm install --namespace mytest .
+  610  cd ../
+  611  helm create mytestt
+  612  cd ./mytestt/
+  613   helm install --namespace mytestt .
+  614  cd ../mytest
+  615   helm dep update
+  616   helm dep build
+  617   helm install --namespace mytest .
+  618   helm install --namespace mytest .
+  619  helm
+  620   helm delete --namespace mytest .
+  621   helm delete .
+  622  helm history
+  623  helm history list
+  624  helm delete mytest
+  625  helm delete dunking-cardinal
+  626   helm dep update
+  627   helm install --help
+  628   helm delete --namespace mytest --name testC .
+  629   helm install --namespace mytest --name testC .
+  630   helm install --namespace mytest --name test-c .
+  631   helm dep update
+  632   helm install --namespace mytest --name test-c .
+  633  helm ls
+  634  helm del --purge test-c
+  635   helm install --namespace mytest --name test-c .
+  636  helm
+  637  helm status test-c
+  638  helm del --purge test-c
+  639  helm status test-c
+  640  kubectl get pod
+  641  kubectl get pod -o wide
+  642  kubectl get ns
+  643  kubectl get pods --all-namespaces
+  644  history
+  645  helm dep build
+  646   helm install --namespace mytest --name test-c .
+  647  helm del --purge test-c
+  648  helm dep update
+  649  helm dep build
+  650   helm install --namespace mytest --name test-c .
+  651  helm status test-c
+  652  helm del --purge test-c
+  653  helm ls
+  654  helm dep update
+  655  helm dep build
+  656   helm install --namespace mytest --name test-c .
+  657  helm del --purge test-c
+  658   helm install --namespace mytest --name test-c .
+  659   helm install --namespace mytest --name test-c .
+  660  helm del --purge test-c
+  661   helm install --namespace mytest --name test-c .
+  662   helm install --namespace mytest --name test-c --dry-run .
+  663  helm del --purge test-c
+  664   helm install --namespace mytest --name test-c --dry-run .
+  665  helm del --purge test-c
+  666   helm install --namespace mytest --name test-c .
+  667   helm install --namespace mytest --name test-c .
+  668  helm del --purge test-c
+  669   helm install --namespace mytest --name test-c .
+  670   helm install --namespace mytest --name test-c .
+  671  helm del --purge test-c
+  672   helm install --namespace mytest --name test-c .
+  673  helm del --purge test-c
+  674   helm install --namespace mytest --name test-c .
+  675  helm del --purge test-c
+  676   helm install --namespace mytest --name test-c .
+  677  helm del --purge test-c
+  678   helm install --namespace mytest --name test-c .
+  679  helm status test-c
+  680  helm status --help
+  681  helm status test-c
+  682  helm status test-c
+  683  helm status test-c
+  684  helm status test-c
+  685  helm status test-c
+  686  kubectl get svc
+  687  helm del --purge my-release2
+  688  history
+  689  kubectl get pods --all-namespaces
+  690  kubectl get svc --all-namespaces
+  691  helm ls
+  692  helm del --purge calico-puma
+  693  helm del --purge gilded-hummingbird
+  694  helm del --purge hoping-toucan
+  695  helm del --purge my-release
+  696  helm del --purge nihilist-sasquatch
+  697  helm del --purge quieting-stoat snug-poodle winsome-kudu
+  698  kubectl get pods --all-namespaces
+  699  kubectl get svc --all-namespaces
+  700  kubectl get events --namespace=mytest
+  701  kubectl get svc --all-namespaces
+  702  kubectl get pods --all-namespaces
+  703  kubectl get pods --all-namespaces
+  704  kubectl get pv --all-namespaces
+  705  kubectl get rbac --all-namespaces
+  706  helm status test-c
+  707  az aks show --resource-group test_ressource_group --name test-cluster --query nodeResourceGroup -o tsv
+  708  az aks browse  --resource-group test_ressource_group --name test-cluster
+  709  kubectl describe test-c-nginx-ingress-controller
+  710  kubectl describe mytest/test-c-nginx-ingress-controller
+  711  kubectl describe --namespace=mytest test-c-nginx-ingress-controller
+  712  helm status test-c
+  713* kubectl get svc  --namespace test-c-nginx-ingress-co
+  714  kubectl describe --namespace mytest test-c-nginx-ingress-controller
+  715  kubectl get pvc --namespace mytest
+  716  kubectl get svc --namespace mytest
+  717  kubectl describe --namespace mytest data-dunking-cardinal-redis-ha-server-0
+  718  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller
+  719  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller --yaml
+  720  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller -o yaml
+  721  kubectl describe svc --namespace mytest -o yml test-c-nginx-ingress-controller 
+  722  kubectl describe svc --namespace mytest -ojson test-c-nginx-ingress-controller 
+  723  kubectl describe svc --namespace mytest  test-c-nginx-ingress-controller -o=yaml
+  724  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller
+  725  kubectl port-forward test-c-nginx-ingress-controller-84c94d89b5-2cg64  8080:8080 --namespace=mytest
+  726  kubectl port-forward test-c-nginx-ingress-default-backend-c95bd89fc-zkg9d  8080:8080 --namespace=mytest
+  727  helm del --purge test-c
+  728   helm install --namespace mytest --name test-c .
+  729  helm del --purge test-c
+  730   helm install --namespace mytest --name test-c .
+  731  kubectl port-forward test-c-nginx-ingress-default-backend-c95bd89fc-s5jt6  8080:8080 --namespace=mytest
+  732  kubectl port-forward test-c-nginx-ingress-controller-84c94d89b5-6wplq  8080:8080 --namespace=mytest
+  733  az openshift create -n oscluster -g osrg `
+–node-vm-size Standard_DS4_v3`
+  734  az openshift create -n oscluster -g osrg ` –node-vm-size Standard_DS4_v3`  --l eastus
+  735  az openshift create -n oscluster -g osrg `–node-vm-size Standard_DS4_v3`  --l eastus
+  736  az openshift create -n oscluster -g osrg --l eastus
+  737  cat ~/.ssh/id_rsa.pub 
+  738  helm del --purge test-c
+  739   helm install --namespace mytest --name test-c .
+  740  kubectl port-forward test-c-nginx-ingress-controller-stats  8080:18080 --namespace=mytest
+  741  kubectl edit configmap test-c-nginx-ingress-controller --namespace=mytest
+  742  helm status test-c
+  743  kubectl edit svc test-c-nginx-ingress-controller
+  744  kubectl edit svc test-c-nginx-ingress-controller --namespace mytest
+  745  helm del --purge test-c
+  746   helm install --namespace mytest --name test-c .
+  747   helm install --namespace mytest --name test-c .
+  748  helm del --purge test-c
+  749   helm install --namespace mytest --name test-c .
+  750  helm status test-c
+  751  helm status test-c
+  752  helm status test-c
+  753  helm status test-c --watch
+  754  helm status test-c
+  755  helm status test-c
+  756  helm status test-c
+  757  helm del --purge test-c
+  758   helm install --namespace mytest --name test-c .
+  759  kubectl edit svc test-c-nginx-ingress-controller-stats --namespace mytest
+  760  kubectl port-forward test-c-nginx-ingress-controller-b4fbb6987-mlhfs 18080:18080 --namespace mytest 
+  761  helm status test-c
+  762  kubectl edit svc test-c-nginx-ingress-controller-stats --namespace mytest
+  763  kubectl edit pod test-c-nginx-ingress-controller-b4fbb6987-mlhfs --namespace mytest
+  764  kubectl exec -it test-c-mytest-7fd448b4c9-srf4n -- /bin/bash
+  765  kubectl exec -it test-c-mytest-7fd448b4c9-srf4n --namespace mytest -- /bin/bash
+  766  helm del --purge test-c
+  767   helm install --namespace mytest --name test-c .
+  768  kubectl port-forward test-c-mytest 80:80 --namespace mytest 
+  769  helm status test-c
+  770  kubectl port-forward test-c-mytest-7fd448b4c9-vfdz7 18880:80 --namespace mytest 
+  771  helm status test-c
+  772  helm status test-c
+  773  kubectl edit ingress --namespace mytest test-c-mytest
+  774  kubectl edit ingress --namespace mytest test-c-mytest
+  775  helm del --purge test-c
+  776   helm install --namespace mytest --name test-c .
+  777  helm status test-c
+  778  helm status test-c
+  779  helm status test-c
+  780  kubectl edit ingress --namespace mytest test-c-mytest
+  781  kubectl edit svc --namespace test-c-mytest test-c-mytest
+  782  kubectl edit svc --namespace mytest test-c-mytest
+  783  helm del --purge test-c
+  784   helm install --namespace mytest --name test-c .
+  785  helm del --purge test-c
+  786   helm install --namespace mytest --name test-c .
+  787  helm deps list
+  788  helm dep list
+  789  helm status test-c
+  790  helm del --purge test-c
+  791   helm install --namespace mytest --name test-c .
+  792  kubectl get hpa --namespace mytest
+  793  helm del --purge test-c
+  794   helm install --namespace mytest --name test-c .
+  795  kubectl get hpa --namespace mytest
+  796  helm status test-c
+  797  helm del --purge test-c
+  798   helm install --namespace mytest --name test-c .
+  799  kubectl get hpa --namespace mytest
+  800  kubectl get hpa --namespace mytest
+  801  helm del --purge test-c
+  802   helm install --namespace mytest --name test-c .
+  803  kubectl get hpa --namespace mytest
+  804  kubectl get hpa --namespace mytest
+  805  kubectl get hpa --namespace mytest
+  806  kubectl describe hpa --namespace mytest
+  807  kubectl get hpa --namespace mytest
+  808  helm del --purge test-c
+  809   helm install --namespace mytest --name test-c .
+  810  kubectl describe hpa --namespace mytest
+  811  kubectl describe hpa --namespace mytest
+  812  kubectl describe hpa --namespace mytest
+  813  helm del --purge test-c
+  814   helm install --namespace mytest --name test-c .
+  815  kubectl describe hpa --namespace mytest
+  816  kubectl describe hpa --namespace mytest
+  817  kubectl describe hpa --namespace mytest
+  818  kubectl describe hpa --namespace mytest
+  819  kubectl describe hpa --namespace mytest
+  820  kubectl describe hpa --namespace mytest
+  821  kubectl describe hpa --namespace mytest
+  822  kubectl describe hpa --namespace mytest
+  823  kubectl describe hpa --namespace mytest
+  824  kubectl describe hpa --namespace mytest
+  825  kubectl describe hpa --namespace mytest
+  826  kubectl describe hpa --namespace mytest
+  827  kubectl describe hpa --namespace mytest
+  828  kubectl describe hpa --all-namespaces
+  829  kubectl get hpa --all-namespaces
+  830  helm status test-c
+  831  kubectl describe ClusterRole test-c-prometheus-server --namespace mytest
+  832  kubectl describe ServiceAccount test-c-prometheus-server --namespace mytest
+  833  kubectl get hpa --all-namespaces
+  834  helm del --purge test-c
+  835   helm install --namespace mytest --name test-c .
+  836   helm install --namespace mytest --name test-c .
+  837  helm del --purge test-c
+  838   helm install --namespace mytest --name test-c .
+  839  helm status test-c
+  840  helm status test-c
+  841  kubectl get hpa --all-namespaces
+  842  helm status test-c
+  843  helm del --purge test-c
+  844   helm install --namespace mytest --name test-c .
+  845  kubectl get hpa --all-namespaces
+  846  kubectl get hpa --all-namespaces
+  847  kubectl get hpa --namespace mytest
+  848  helm status test-c
+  849  kubectl exec -it test-c-mytest-7fd448b4c9-9td8j --namespace mytest -- /bin/bash
+  850  helm status test-c
+  851  kubectl exec -it test-c-mytest-7fd448b4c9-9td8j --namespace mytest -- /bin/bash
+  852  helm del --purge test-c
+  853  kubectl exec -it test-c-mytest-7fd448b4c9-9td8j --namespace mytest -- /bin/bash
+  854   helm install --namespace mytest --name test-c .
+  855  helm del --purge test-c
+  856   helm install --namespace mytest --name test-c .
+  857  helm status test-c
+  858  kubectl exec -it test-c-mytest-74f6899-8mxr8 --namespace mytest -- /bin/bash
+  859  helm status test-c
+  860   helm install --namespace mytest --name test-c .
+  861  helm del --purge test-c
+  862   helm install --namespace mytest --debug --wait --name test-c .
+  863  helm del --purge test-c
+  864   helm install --namespace mytest --debug  --name test-c .
+  865  helm status test-c
+  866  helm del --purge test-c
+  867   helm install --namespace mytest --debug  --name test-c .
+  868  helm status test-c
+  869  git init
+  870  git add README.md
+  871  git commit -m "first commit"
+  872  git remote add origin https://github.com/fifoome/mytest.git
+  873  echo "# mytest" >> README.md
+  874  git init
+  875  git add README.md
+  876  git commit -m "first commit"
+  877  git remote add origin https://github.com/fifoome/mytest.git
+  878  git push -u origin master
+  879  git add .
+  880  git commit -m "second commit"
+  881  git push -u origin master
+  882  history > history
