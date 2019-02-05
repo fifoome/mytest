@@ -1,20 +1,44 @@
 from flask import Flask
 from flask import request
 import redis, toml
+from flask import jsonify
 
-with open("/etc/config/config.toml", "r") as f:
-    parsed_toml = toml.loads(f.read())
 
-r = redis.Redis(
-    host=parsed_toml["alias"]['redis'],
-    port=parsed_toml["alias"]['redisport'],
-    password='')
+
+try:
+    with open("/etc/config/config.toml", "r") as f:
+    # with open("./config.toml", "r") as f:
+        parsed_toml = toml.loads(f.read())
+    r = redis.Redis(
+        host=parsed_toml["alias"]['redis'],
+        port=parsed_toml["alias"]['redisport'],
+        password='')
+except:
+
+    r = None
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/test')
 def hello_world():
-    return 'Hey, we have Flask in a Docker container! \nthe value in redis is: ' + str(r.get("mykey"))
+
+    if r == None:
+        d = {
+            "title": "Hey, we have Flask in a Docker container!",
+            "redis_key": "failed",
+            "redis": parsed_toml["alias"]['redis'] + ":" + parsed_toml["alias"]['redisport']
+            }
+    else:
+        d = {
+            "title": "Hey, we have Flask in a Docker container!",
+            "redis_key": str(r.get("mykey")),
+            "redis": parsed_toml["alias"]['redis'] + ":" + parsed_toml["alias"]['redisport']}
+    return jsonify(d)
+
+@app.route('/')
+def ma():
+
+    return "test"
 
 @app.route('/setdata')
 def data():
@@ -23,4 +47,6 @@ def data():
     return 'Set the key'
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    from gevent.pywsgi import WSGIServer
+    http_server = WSGIServer(('', 80), app)
+    http_server.serve_forever()

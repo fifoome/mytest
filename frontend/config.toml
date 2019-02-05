@@ -1,0 +1,5 @@
+[alias]
+redis = "test-g-redis-ha"
+redisport = "6379"
+cockroach = "test-g-cockroachdb"
+cockroachport = "26257"

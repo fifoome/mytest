@@ -1,20 +1,46 @@
-[debug] Created tunnel using local port: '57469'
+[debug] Created tunnel using local port: '54395'
 
-[debug] SERVER: "127.0.0.1:57469"
+[debug] SERVER: "127.0.0.1:54395"
 
 [debug] Original chart version: ""
-[debug] CHART PATH: /Users/thedmbp/code/mytest
+[debug] CHART PATH: C:\Users\CyrilleCazenave\code\mytest
 
-NAME:   test-g
+NAME:   quieting-sponge
 REVISION: 1
-RELEASED: Mon Feb  4 22:02:15 2019
+RELEASED: Tue Feb  5 14:05:14 2019
 CHART: mytest-0.1.0
 USER-SUPPLIED VALUES:
 {}
 
 COMPUTED VALUES:
 affinity: {}
-annotations: {}
+backend:
+  affinity: {}
+  annotations:
+    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
+    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
+    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
+  fullnameOverride: ""
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: fifoosab/flask
+    tag: 0.0.12
+  ingress:
+    annotations: {}
+    enabled: false
+    hosts:
+    - chart-example.local
+    paths: []
+    tls: []
+  nameOverride: ""
+  nodeSelector: {}
+  replicaCount: 1
+  resources: {}
+  service:
+    port: 8099
+    type: ClusterIP
+  tolerations: []
 cockroachdb:
   CacheSize: 25%
   ClusterDomain: cluster.local
@@ -58,11 +84,33 @@ cockroachdb:
     type: RollingUpdate
   global: {}
 frontend:
+  affinity: {}
+  annotations:
+    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
+    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
+    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
+  fullnameOverride: ""
+  global: {}
   image:
     pullPolicy: IfNotPresent
-    repository: fifoosab/react-docker
-    tag: latest
-  name: frontend
+    repository: fifoosab/frontend
+    tag: 0.0.14
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    enabled: true
+    hosts:
+    - fifoome.com
+    paths: []
+    tls: []
+  nameOverride: ""
+  nodeSelector: {}
+  replicaCount: 1
+  resources: {}
+  service:
+    port: 80
+    type: ClusterIP
+  tolerations: []
 fullnameOverride: ""
 hpa-operator:
   affinity: {}
@@ -88,23 +136,14 @@ hpa-operator:
   tolerations: []
 image:
   pullPolicy: IfNotPresent
-  repository: fifoosab/flask
-  tag: 0.0.3
+  repository: nginx
+  tag: stable
 ingress:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  enabled: true
+  annotations: {}
+  enabled: false
   hosts:
   - chart-example.local
-  paths:
-  - host: fifoomeb.com
-    path: /
-    serviceName: ms-mytest
-    servicePort: "80"
-  - host: fifoome.com
-    path: /
-    serviceName: ms-frontend
-    servicePort: "80"
+  paths: []
   tls: []
 nameOverride: ""
 nginx-ingress:
@@ -196,7 +235,8 @@ nginx-ingress:
       healthCheckNodePort: 0
       labels: {}
       loadBalancerIP: ""
-      loadBalancerSourceRanges: []
+      loadBalancerSourceRanges:
+      - 96.78.0.0/16
       nodePorts:
         http: ""
         https: ""
@@ -756,33 +796,73 @@ tolerations: []
 
 HOOKS:
 ---
-# test-g-redis-ha-service-test
+# quieting-sponge-backend-test-connection
 apiVersion: v1
 kind: Pod
 metadata:
-  name: test-g-redis-ha-service-test
+  name: "quieting-sponge-backend-test-connection"
+  labels:
+    app.kubernetes.io/name: backend
+    helm.sh/chart: backend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['quieting-sponge-backend:8099']
+  restartPolicy: Never
+---
+# quieting-sponge-redis-ha-service-test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quieting-sponge-redis-ha-service-test
   labels:
     app: redis-ha
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: redis-ha-3.1.3
   annotations:
     "helm.sh/hook": test-success
 spec:
   containers:
-  - name: "test-g-service-test"
+  - name: "quieting-sponge-service-test"
     image: redis:5.0.3-alpine
     command:
       - sh
       - -c
-      - redis-cli -h test-g-redis-ha -p 6379 info server
+      - redis-cli -h quieting-sponge-redis-ha -p 6379 info server
   restartPolicy: Never
 ---
-# test-g-cockroachdb-test
+# quieting-sponge-frontend-test-connection
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "test-g-cockroachdb-test"
+  name: "quieting-sponge-frontend-test-connection"
+  labels:
+    app.kubernetes.io/name: frontend
+    helm.sh/chart: frontend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['quieting-sponge-frontend:80']
+  restartPolicy: Never
+---
+# quieting-sponge-cockroachdb-test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "quieting-sponge-cockroachdb-test"
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -795,42 +875,22 @@ spec:
       - "sql"
       - "--insecure"
       - "--host"
-      - "test-g-cockroachdb-public.mytest"
+      - "quieting-sponge-cockroachdb-public.default"
       - "--port"
       - "26257"
       - "-e"
       - "SHOW DATABASES;"
   restartPolicy: Never
 ---
-# test-g-mytest-test-connection
+# quieting-sponge-redis-ha-configmap-test
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "test-g-mytest-test-connection"
-  labels:
-    app.kubernetes.io/name: mytest
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
-    app.kubernetes.io/managed-by: Tiller
-  annotations:
-    "helm.sh/hook": test-success
-spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args:  ['test-g-mytest:80']
-  restartPolicy: Never
----
-# test-g-redis-ha-configmap-test
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-g-redis-ha-configmap-test
+  name: quieting-sponge-redis-ha-configmap-test
   labels:
     app: redis-ha
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: redis-ha-3.1.3
   annotations:
     "helm.sh/hook": test-success
@@ -857,10 +917,10 @@ spec:
   volumes:
   - name: config
     configMap:
-      name: test-g-redis-ha-configmap
+      name: quieting-sponge-redis-ha-configmap
   - name: probes
     configMap:
-      name: test-g-redis-ha-probes
+      name: quieting-sponge-redis-ha-probes
   restartPolicy: Never
 MANIFEST:
 
@@ -869,16 +929,16 @@ MANIFEST:
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: "test-g-cockroachdb-budget"
+  name: "quieting-sponge-cockroachdb-budget"
   labels:
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: "cockroachdb-2.0.10"
-    component: "test-g-cockroachdb"
+    component: "quieting-sponge-cockroachdb"
 spec:
   selector:
     matchLabels:
-      component: "test-g-cockroachdb"
+      component: "quieting-sponge-cockroachdb"
   maxUnavailable: 1
 ---
 # Source: mytest/charts/nginx-ingress/templates/controller-configmap.yaml
@@ -890,8 +950,8 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "controller"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-controller
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-controller
 data:
   enable-vts-status: "true"
 ---
@@ -902,10 +962,10 @@ metadata:
   labels:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-alertmanager
+  name: quieting-sponge-prometheus-alertmanager
 data:
   alertmanager.yml: |
     global: {}
@@ -924,10 +984,10 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 data:
   alerts: |
     {}
@@ -1112,7 +1172,7 @@ data:
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         relabel_configs:
         - source_labels: [__meta_kubernetes_namespace]
-          regex: mytest
+          regex: default
           action: keep
         - source_labels: [__meta_kubernetes_pod_label_app]
           regex: prometheus
@@ -1130,12 +1190,12 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: test-g-redis-ha-configmap
+  name: quieting-sponge-redis-ha-configmap
   labels:
     heritage: Tiller
-    release: test-g
+    release: quieting-sponge
     chart: redis-ha-3.1.3
-    app: test-g-redis-ha
+    app: quieting-sponge-redis-ha
 data:
   redis.conf: |
     dir "/data"
@@ -1157,14 +1217,14 @@ data:
   init.sh: |
     HOSTNAME="$(hostname)"
     INDEX="${HOSTNAME##*-}"
-    MASTER="$(redis-cli -h test-g-redis-ha -p 26379 sentinel get-master-addr-by-name mymaster | grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
+    MASTER="$(redis-cli -h quieting-sponge-redis-ha -p 26379 sentinel get-master-addr-by-name mymaster | grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
     MASTER_GROUP="mymaster"
     QUORUM="2"
     REDIS_CONF=/data/conf/redis.conf
     REDIS_PORT=6379
     SENTINEL_CONF=/data/conf/sentinel.conf
     SENTINEL_PORT=26379
-    SERVICE=test-g-redis-ha
+    SERVICE=quieting-sponge-redis-ha
     set -eu
 
     sentinel_update() {
@@ -1258,12 +1318,12 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: test-g-redis-ha-probes
+  name: quieting-sponge-redis-ha-probes
   labels:
     heritage: Tiller
-    release: test-g
+    release: quieting-sponge
     chart: redis-ha-3.1.3
-    app: test-g-redis-ha
+    app: quieting-sponge-redis-ha
 data:
   check-quorum.sh: |
     #!/bin/sh
@@ -1297,55 +1357,55 @@ data:
         exit 1
     fi
 ---
+# Source: mytest/templates/configmap-backend.yaml
+# This is a simple example of using a config map to create a single page static site.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  quieting-sponge-backend
+  labels:
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/instance: quieting-sponge
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/name: quieting-sponge-backend
+data:
+  # When the config map is mounted as a volume, these will be created as files.
+  config.toml: |
+    [alias]
+    redis = "quieting-sponge-redis-ha"
+    redisport = "6379"
+    cockroach = "quieting-sponge-cockroachdb"
+    cockroachport = "26257"
+---
 # Source: mytest/templates/configmap-frontend.yaml
 # This is a simple example of using a config map to create a single page static site.
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: test-g-frontend-special-config-frontend
+  name: quieting-sponge-frontend
   labels:
     app.kubernetes.io/managed-by: Tiller
-    app.kubernetes.io/instance: test-g
+    app.kubernetes.io/instance: quieting-sponge
     helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/name: mytest
+    app.kubernetes.io/name: quieting-sponge-frontend
 data:
   # When the config map is mounted as a volume, these will be created as files.
   config.json: |
     {
-      "backendIP": "test-g-mytest",
-      "backendPort": "80"
+      "backend": "quieting-sponge-frontend",
+      "backendPort": "8099"
     }
----
-# Source: mytest/templates/configmap.yaml
-# This is a simple example of using a config map to create a single page static site.
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: test-g-mytest-special-config-backend
-  labels:
-    app.kubernetes.io/managed-by: Tiller
-    app.kubernetes.io/instance: test-g
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/name: mytest
-data:
-  # When the config map is mounted as a volume, these will be created as files.
-  config.toml: |
-    [alias]
-    redis = "test-g-redis-ha"
-    redisport = "6379"
-    cockroach = "test-g-cockroachdb"
-    cockroachport = "26257"
 ---
 # Source: mytest/charts/hpa-operator/templates/service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: test-g-hpa-operator
+  name: quieting-sponge-hpa-operator
   labels:
     chart: "hpa-operator-0.0.7"
-    app: "test-g-hpa-operator"
+    app: "quieting-sponge-hpa-operator"
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
 ---
 # Source: mytest/charts/nginx-ingress/templates/serviceaccount.yaml
 apiVersion: v1
@@ -1355,8 +1415,8 @@ metadata:
     app: nginx-ingress
     chart: nginx-ingress-1.2.3
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress
 ---
 # Source: mytest/charts/prometheus/templates/alertmanager-serviceaccount.yaml
 apiVersion: v1
@@ -1365,10 +1425,10 @@ metadata:
   labels:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-alertmanager
+  name: quieting-sponge-prometheus-alertmanager
 ---
 # Source: mytest/charts/prometheus/templates/pushgateway-serviceaccount.yaml
 apiVersion: v1
@@ -1377,10 +1437,10 @@ metadata:
   labels:
     component: "pushgateway"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-pushgateway
+  name: quieting-sponge-prometheus-pushgateway
 ---
 # Source: mytest/charts/prometheus/templates/server-serviceaccount.yaml
 apiVersion: v1
@@ -1389,21 +1449,21 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 ---
 # Source: mytest/charts/hpa-operator/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
-  name: test-g-hpa-operator
+  name: quieting-sponge-hpa-operator
   labels:
     chart: "hpa-operator-0.0.7"
-    app: "test-g-hpa-operator"
+    app: "quieting-sponge-hpa-operator"
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
 rules:
 - apiGroups:
   - banzaicloud.com
@@ -1442,8 +1502,8 @@ metadata:
     app: nginx-ingress
     chart: nginx-ingress-1.2.3
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress
 rules:
   - apiGroups:
       - ""
@@ -1500,10 +1560,10 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 rules:
   - apiGroups:
       - ""
@@ -1537,20 +1597,20 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: test-g-hpa-operator
+  name: quieting-sponge-hpa-operator
   labels:
     chart: "hpa-operator-0.0.7"
-    app: "test-g-hpa-operator"
+    app: "quieting-sponge-hpa-operator"
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
 subjects:
 - kind: ServiceAccount
-  name: test-g-hpa-operator
-  namespace: mytest
+  name: quieting-sponge-hpa-operator
+  namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: test-g-hpa-operator
+  name: quieting-sponge-hpa-operator
 ---
 # Source: mytest/charts/nginx-ingress/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -1560,16 +1620,16 @@ metadata:
     app: nginx-ingress
     chart: nginx-ingress-1.2.3
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: test-g-nginx-ingress
+  name: quieting-sponge-nginx-ingress
 subjects:
   - kind: ServiceAccount
-    name: test-g-nginx-ingress
-    namespace: mytest
+    name: quieting-sponge-nginx-ingress
+    namespace: default
 ---
 # Source: mytest/charts/prometheus/templates/server-clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -1578,18 +1638,18 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 subjects:
   - kind: ServiceAccount
-    name: test-g-prometheus-server
-    namespace: mytest
+    name: quieting-sponge-prometheus-server
+    namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 ---
 # Source: mytest/charts/nginx-ingress/templates/role.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -1599,8 +1659,8 @@ metadata:
     app: nginx-ingress
     chart: nginx-ingress-1.2.3
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress
 rules:
   - apiGroups:
       - ""
@@ -1681,16 +1741,37 @@ metadata:
     app: nginx-ingress
     chart: nginx-ingress-1.2.3
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: test-g-nginx-ingress
+  name: quieting-sponge-nginx-ingress
 subjects:
   - kind: ServiceAccount
-    name: test-g-nginx-ingress
-    namespace: mytest
+    name: quieting-sponge-nginx-ingress
+    namespace: default
+---
+# Source: mytest/charts/backend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: quieting-sponge-backend
+  labels:
+    app.kubernetes.io/name: backend
+    helm.sh/chart: backend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8099
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/instance: quieting-sponge
 ---
 # Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
 apiVersion: v1
@@ -1700,12 +1781,12 @@ metadata:
   # set such that they can resolve each other's IP addresses. It does not
   # create a load-balanced ClusterIP and should not be used directly by clients
   # in most circumstances.
-  name: "test-g-cockroachdb"
+  name: "quieting-sponge-cockroachdb"
   labels:
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: "cockroachdb-2.0.10"
-    component: "test-g-cockroachdb"
+    component: "quieting-sponge-cockroachdb"
   annotations:
     # Use this annotation in addition to the actual field below because the
     # annotation will stop being respected soon but the field is broken in
@@ -1731,7 +1812,7 @@ spec:
   publishNotReadyAddresses: true
   clusterIP: None
   selector:
-    component: "test-g-cockroachdb"
+    component: "quieting-sponge-cockroachdb"
 ---
 # Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
 apiVersion: v1
@@ -1739,15 +1820,15 @@ kind: Service
 metadata:
   # This service is meant to be used by clients of the database. It exposes a ClusterIP that will
   # automatically load balance connections to the different database pods.
-  name: "test-g-cockroachdb-public"
+  name: "quieting-sponge-cockroachdb-public"
   annotations:
     {}
     
   labels:
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: "cockroachdb-2.0.10"
-    component: "test-g-cockroachdb"
+    component: "quieting-sponge-cockroachdb"
 spec:
   type: ClusterIP
   ports:
@@ -1761,7 +1842,28 @@ spec:
     targetPort: 8080
     name: http
   selector:
-    component: "test-g-cockroachdb"
+    component: "quieting-sponge-cockroachdb"
+---
+# Source: mytest/charts/frontend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: quieting-sponge-frontend
+  labels:
+    app.kubernetes.io/name: frontend
+    helm.sh/chart: frontend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/instance: quieting-sponge
 ---
 # Source: mytest/charts/nginx-ingress/templates/controller-metrics-service.yaml
 apiVersion: v1
@@ -1772,8 +1874,8 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "controller"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-controller-metrics
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-controller-metrics
 spec:
   clusterIP: ""
   ports:
@@ -1783,7 +1885,7 @@ spec:
   selector:
     app: nginx-ingress
     component: "controller"
-    release: test-g
+    release: quieting-sponge
   type: "ClusterIP"
 ---
 # Source: mytest/charts/nginx-ingress/templates/controller-service.yaml
@@ -1795,10 +1897,13 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "controller"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-controller
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-controller
 spec:
   clusterIP: ""
+  loadBalancerSourceRanges:
+    - 96.78.0.0/16
+    
   ports:
     - name: http
       port: 80
@@ -1811,7 +1916,7 @@ spec:
   selector:
     app: nginx-ingress
     component: "controller"
-    release: test-g
+    release: quieting-sponge
   type: "LoadBalancer"
 ---
 # Source: mytest/charts/nginx-ingress/templates/controller-stats-service.yaml
@@ -1823,8 +1928,8 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "controller"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-controller-stats
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-controller-stats
 spec:
   clusterIP: ""
   ports:
@@ -1834,7 +1939,7 @@ spec:
   selector:
     app: nginx-ingress
     component: "controller"
-    release: test-g
+    release: quieting-sponge
   type: "ClusterIP"
 ---
 # Source: mytest/charts/nginx-ingress/templates/default-backend-service.yaml
@@ -1846,8 +1951,8 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "default-backend"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-default-backend
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-default-backend
 spec:
   clusterIP: ""
   ports:
@@ -1858,7 +1963,7 @@ spec:
   selector:
     app: nginx-ingress
     component: "default-backend"
-    release: test-g
+    release: quieting-sponge
   type: "ClusterIP"
 ---
 # Source: mytest/charts/prometheus/templates/alertmanager-service-headless.yaml
@@ -1868,10 +1973,10 @@ metadata:
   labels:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-alertmanager-headless
+  name: quieting-sponge-prometheus-alertmanager-headless
 spec:
   clusterIP: None
   ports:
@@ -1882,7 +1987,7 @@ spec:
   selector:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
 ---
 # Source: mytest/charts/prometheus/templates/alertmanager-service.yaml
 apiVersion: v1
@@ -1891,10 +1996,10 @@ metadata:
   labels:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-alertmanager
+  name: quieting-sponge-prometheus-alertmanager
 spec:
   ports:
     - name: http
@@ -1904,7 +2009,7 @@ spec:
   selector:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
   type: "ClusterIP"
 ---
 # Source: mytest/charts/prometheus/templates/pushgateway-service.yaml
@@ -1917,10 +2022,10 @@ metadata:
   labels:
     component: "pushgateway"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-pushgateway
+  name: quieting-sponge-prometheus-pushgateway
 spec:
   ports:
     - name: http
@@ -1930,7 +2035,7 @@ spec:
   selector:
     component: "pushgateway"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
   type: "ClusterIP"
 ---
 # Source: mytest/charts/prometheus/templates/server-service-headless.yaml
@@ -1940,10 +2045,10 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server-headless
+  name: quieting-sponge-prometheus-server-headless
 spec:
   clusterIP: None
   ports:
@@ -1954,7 +2059,7 @@ spec:
   selector:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
 ---
 # Source: mytest/charts/prometheus/templates/server-service.yaml
 apiVersion: v1
@@ -1963,10 +2068,10 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 spec:
   ports:
     - name: http
@@ -1976,18 +2081,18 @@ spec:
   selector:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
   type: "ClusterIP"
 ---
 # Source: mytest/charts/redis-ha/templates/redis-ha-announce-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-g-redis-ha-announce-0
+  name: quieting-sponge-redis-ha-announce-1
   labels:
     app: redis-ha
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: redis-ha-3.1.3
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
@@ -2004,19 +2109,19 @@ spec:
     protocol: TCP
     targetPort: sentinel
   selector:
-    release: test-g
+    release: quieting-sponge
     app: redis-ha
-    "statefulset.kubernetes.io/pod-name": test-g-redis-ha-server-0
+    "statefulset.kubernetes.io/pod-name": quieting-sponge-redis-ha-server-1
 ---
 # Source: mytest/charts/redis-ha/templates/redis-ha-announce-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-g-redis-ha-announce-1
+  name: quieting-sponge-redis-ha-announce-0
   labels:
     app: redis-ha
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: redis-ha-3.1.3
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
@@ -2033,19 +2138,19 @@ spec:
     protocol: TCP
     targetPort: sentinel
   selector:
-    release: test-g
+    release: quieting-sponge
     app: redis-ha
-    "statefulset.kubernetes.io/pod-name": test-g-redis-ha-server-1
+    "statefulset.kubernetes.io/pod-name": quieting-sponge-redis-ha-server-0
 ---
 # Source: mytest/charts/redis-ha/templates/redis-ha-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-g-redis-ha
+  name: quieting-sponge-redis-ha
   labels:
     app: redis-ha
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: redis-ha-3.1.3
   annotations:
 spec:
@@ -2061,76 +2166,147 @@ spec:
     protocol: TCP
     targetPort: sentinel
   selector:
-    release: test-g
+    release: quieting-sponge
     app: redis-ha
 ---
-# Source: mytest/templates/service-frontend.yaml
-apiVersion: v1
-kind: Service
+# Source: mytest/charts/backend/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: test-g-frontend
+  name: quieting-sponge-backend
   labels:
-    app.kubernetes.io/name: test-g-frontend
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
+    app.kubernetes.io/name: backend
+    helm.sh/chart: backend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
     app.kubernetes.io/managed-by: Tiller
+  annotations:
+    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
+    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
+    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
+    
 spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
+  replicas: 1
   selector:
-    app.kubernetes.io/name: test-g-frontend
-    app.kubernetes.io/instance: test-g
+    matchLabels:
+      app.kubernetes.io/name: backend
+      app.kubernetes.io/instance: quieting-sponge
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: backend
+        app.kubernetes.io/instance: quieting-sponge
+    spec:
+      volumes:
+      - name: config-volume-backend
+        configMap:
+          # Provide the name of the ConfigMap containing the files you want
+          # to add to the container
+          name:  quieting-sponge-backend
+      containers:
+        - name: backend
+          image: "fifoosab/flask:0.0.12"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: config-volume-backend
+            mountPath: /etc/config
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}
 ---
-# Source: mytest/templates/service.yaml
-apiVersion: v1
-kind: Service
+# Source: mytest/charts/frontend/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: test-g-mytest
+  name: quieting-sponge-frontend
   labels:
-    app.kubernetes.io/name: mytest
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
+    app.kubernetes.io/name: frontend
+    helm.sh/chart: frontend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
     app.kubernetes.io/managed-by: Tiller
+  annotations:
+    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
+    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
+    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
+    
 spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
+  replicas: 1
   selector:
-    app.kubernetes.io/name: mytest
-    app.kubernetes.io/instance: test-g
+    matchLabels:
+      app.kubernetes.io/name: frontend
+      app.kubernetes.io/instance: quieting-sponge
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: frontend
+        app.kubernetes.io/instance: quieting-sponge
+    spec:
+      volumes:
+      - name: config-volume-frontend
+        configMap:
+          # Provide the name of the ConfigMap containing the files you want
+          # to add to the container
+          name:  quieting-sponge-frontend
+
+      containers:
+        - name: frontend
+          image: "fifoosab/frontend:0.0.14"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: config-volume-frontend
+            mountPath: /etc/config
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}
 ---
 # Source: mytest/charts/hpa-operator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-g-hpa-operator
+  name: quieting-sponge-hpa-operator
   labels:
     chart: "hpa-operator-0.0.7"
-    app: "test-g-hpa-operator"
+    app: "quieting-sponge-hpa-operator"
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "test-g-hpa-operator"
+      app: "quieting-sponge-hpa-operator"
   template:
     metadata:
       labels:
         chart: "hpa-operator-0.0.7"
-        app: test-g-hpa-operator
+        app: quieting-sponge-hpa-operator
         heritage: "Tiller"
-        release: "test-g"
+        release: "quieting-sponge"
     spec:
 
-      serviceAccountName: test-g-hpa-operator
+      serviceAccountName: quieting-sponge-hpa-operator
 
       containers:
       - name: hpa-operator
@@ -2155,8 +2331,8 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "controller"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-controller
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-controller
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -2169,7 +2345,7 @@ spec:
       labels:
         app: nginx-ingress
         component: "controller"
-        release: test-g
+        release: quieting-sponge
     spec:
       dnsPolicy: ClusterFirst
       containers:
@@ -2178,10 +2354,10 @@ spec:
           imagePullPolicy: "IfNotPresent"
           args:
             - /nginx-ingress-controller
-            - --default-backend-service=mytest/test-g-nginx-ingress-default-backend
+            - --default-backend-service=default/quieting-sponge-nginx-ingress-default-backend
             - --election-id=ingress-controller-leader
             - --ingress-class=nginx
-            - --configmap=mytest/test-g-nginx-ingress-controller
+            - --configmap=default/quieting-sponge-nginx-ingress-controller
           securityContext:
             capabilities:
                 drop:
@@ -2235,7 +2411,7 @@ spec:
             {}
             
       hostNetwork: false
-      serviceAccountName: test-g-nginx-ingress
+      serviceAccountName: quieting-sponge-nginx-ingress
       terminationGracePeriodSeconds: 60
 ---
 # Source: mytest/charts/nginx-ingress/templates/default-backend-deployment.yaml
@@ -2247,8 +2423,8 @@ metadata:
     chart: nginx-ingress-1.2.3
     component: "default-backend"
     heritage: Tiller
-    release: test-g
-  name: test-g-nginx-ingress-default-backend
+    release: quieting-sponge
+  name: quieting-sponge-nginx-ingress-default-backend
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -2257,7 +2433,7 @@ spec:
       labels:
         app: nginx-ingress
         component: "default-backend"
-        release: test-g
+        release: quieting-sponge
     spec:
       containers:
         - name: nginx-ingress-default-backend
@@ -2287,27 +2463,27 @@ metadata:
   labels:
     component: "pushgateway"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-pushgateway
+  name: quieting-sponge-prometheus-pushgateway
 spec:
   selector:
     matchLabels:
       component: "pushgateway"
       app: prometheus
-      release: test-g
+      release: quieting-sponge
   replicas: 1
   template:
     metadata:
       labels:
         component: "pushgateway"
         app: prometheus
-        release: test-g
+        release: quieting-sponge
         chart: prometheus-8.6.1
         heritage: Tiller
     spec:
-      serviceAccountName: test-g-prometheus-pushgateway
+      serviceAccountName: quieting-sponge-prometheus-pushgateway
       containers:
         - name: prometheus-pushgateway
           image: "prom/pushgateway:v0.6.0"
@@ -2324,127 +2500,26 @@ spec:
           resources:
             {}
 ---
-# Source: mytest/templates/deployment-frontend.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: test-g-frontend
-  labels:
-    app.kubernetes.io/name: test-g-frontend
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
-    app.kubernetes.io/managed-by: Tiller
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: test-g-frontend
-      app.kubernetes.io/instance: test-g
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: test-g-frontend
-        app.kubernetes.io/instance: test-g
-    spec:
-      containers:
-        - name: test-g-frontend
-          image: "fifoosab/react-docker:latest"
-          imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
----
-# Source: mytest/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: test-g-mytest
-  labels:
-    app.kubernetes.io/name: mytest
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
-    app.kubernetes.io/managed-by: Tiller
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: mytest
-      app.kubernetes.io/instance: test-g
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: mytest
-        app.kubernetes.io/instance: test-g
-    spec:
-      volumes:
-      - name: config-volume-backend
-        configMap:
-          # Provide the name of the ConfigMap containing the files you want
-          # to add to the container
-          name: test-g-mytest-special-config-backend
-      containers:
-        - name: mytest
-          image: "fifoosab/flask:0.0.3"
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: config-volume-backend
-            mountPath: /etc/config
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
----
 # Source: mytest/charts/cockroachdb/templates/cockroachdb-statefulset.yaml
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: "test-g-cockroachdb"
+  name: "quieting-sponge-cockroachdb"
 spec:
-  serviceName: "test-g-cockroachdb"
+  serviceName: "quieting-sponge-cockroachdb"
   replicas: 3
   selector:
     matchLabels:
       heritage: "Tiller"
-      release: "test-g"
-      component: "test-g-cockroachdb"
+      release: "quieting-sponge"
+      component: "quieting-sponge-cockroachdb"
   template:
     metadata:
       labels:
         heritage: "Tiller"
-        release: "test-g"
+        release: "quieting-sponge"
         chart: "cockroachdb-2.0.10"
-        component: "test-g-cockroachdb"
+        component: "quieting-sponge-cockroachdb"
     spec:
       affinity:
         podAntiAffinity:
@@ -2456,10 +2531,10 @@ spec:
                 - key: component
                   operator: In
                   values:
-                  - "test-g-cockroachdb"
+                  - "quieting-sponge-cockroachdb"
               topologyKey: kubernetes.io/hostname
       containers:
-      - name: "test-g-cockroachdb"
+      - name: "quieting-sponge-cockroachdb"
         image: "cockroachdb/cockroach:v2.1.4"
         imagePullPolicy: "Always"
         ports:
@@ -2485,9 +2560,9 @@ spec:
           
         env:
         - name: STATEFULSET_NAME
-          value: "test-g-cockroachdb"
+          value: "quieting-sponge-cockroachdb"
         - name: STATEFULSET_FQDN
-          value: "test-g-cockroachdb.mytest.svc.cluster.local"
+          value: "quieting-sponge-cockroachdb.default.svc.cluster.local"
         - name: COCKROACH_CHANNEL
           value: kubernetes-helm
         volumeMounts:
@@ -2527,17 +2602,17 @@ metadata:
   labels:
     component: "alertmanager"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-alertmanager
+  name: quieting-sponge-prometheus-alertmanager
 spec:
-  serviceName: test-g-prometheus-alertmanager-headless
+  serviceName: quieting-sponge-prometheus-alertmanager-headless
   selector:
     matchLabels:
       component: "alertmanager"
       app: prometheus
-      release: test-g
+      release: quieting-sponge
   replicas: 1
   podManagementPolicy: OrderedReady
   template:
@@ -2545,11 +2620,11 @@ spec:
       labels:
         component: "alertmanager"
         app: prometheus
-        release: test-g
+        release: quieting-sponge
         chart: prometheus-8.6.1
         heritage: Tiller
     spec:
-      serviceAccountName: test-g-prometheus-alertmanager
+      serviceAccountName: quieting-sponge-prometheus-alertmanager
       containers:
         - name: prometheus-alertmanager
           image: "prom/alertmanager:v0.15.3"
@@ -2599,7 +2674,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: test-g-prometheus-alertmanager
+            name: quieting-sponge-prometheus-alertmanager
   volumeClaimTemplates:
     - metadata:
         name: storage-volume
@@ -2618,17 +2693,17 @@ metadata:
   labels:
     component: "server"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-server
+  name: quieting-sponge-prometheus-server
 spec:
-  serviceName: test-g-prometheus-server-headless
+  serviceName: quieting-sponge-prometheus-server-headless
   selector:
     matchLabels:
       component: "server"
       app: prometheus
-      release: test-g
+      release: quieting-sponge
   replicas: 1
   podManagementPolicy: OrderedReady
   template:
@@ -2636,11 +2711,11 @@ spec:
       labels:
         component: "server"
         app: prometheus
-        release: test-g
+        release: quieting-sponge
         chart: prometheus-8.6.1
         heritage: Tiller
     spec:
-      serviceAccountName: test-g-prometheus-server
+      serviceAccountName: quieting-sponge-prometheus-server
       initContainers:
       - name: "init-chown-data"
         image: "busybox:latest"
@@ -2704,7 +2779,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: test-g-prometheus-server
+            name: quieting-sponge-prometheus-server
   volumeClaimTemplates:
     - metadata:
         name: storage-volume
@@ -2720,18 +2795,18 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: test-g-redis-ha-server
+  name: quieting-sponge-redis-ha-server
   labels:
     app: redis-ha
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: redis-ha-3.1.3
 spec:
   selector:
     matchLabels:
-      release: test-g
+      release: quieting-sponge
       app: redis-ha
-  serviceName: test-g-redis-ha
+  serviceName: quieting-sponge-redis-ha
   replicas: 2
   podManagementPolicy: OrderedReady
   updateStrategy:
@@ -2739,10 +2814,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/init-config: 9789103c1a7447aeb414af55958ac84c40bac33f0e695f68c6339839a34e6241
-        checksum/probe-config: a3074293e088901a7cfb7a5592d5580a894c9e416d0e3eaa514e37f7a5644ed0
+        checksum/init-config: a84ac29ea09a54c64b35c67d01a6cfd1571518a6e0a00577c0d34ec849f8f36c
+        checksum/probe-config: 3a8de58f681909e7ce349e733e58e09392e0e43deff0712518e89daa60b1a2fc
       labels:
-        release: test-g
+        release: quieting-sponge
         app: redis-ha
     spec:
       affinity:
@@ -2751,7 +2826,7 @@ spec:
             - labelSelector:
                 matchLabels:
                   app: redis-ha
-                  release: test-g
+                  release: quieting-sponge
               topologyKey: kubernetes.io/hostname
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
@@ -2759,7 +2834,7 @@ spec:
                 labelSelector:
                   matchLabels:
                     app:  redis-ha
-                    release: test-g
+                    release: quieting-sponge
                 topologyKey: failure-domain.beta.kubernetes.io/zone
         
       securityContext:
@@ -2844,10 +2919,10 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: test-g-redis-ha-configmap
+          name: quieting-sponge-redis-ha-configmap
       - name: probes
         configMap:
-          name: test-g-redis-ha-probes
+          name: quieting-sponge-redis-ha-probes
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -2863,10 +2938,10 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "test-g-cockroachdb-init"
+  name: "quieting-sponge-cockroachdb-init"
   labels:
     heritage: "Tiller"
-    release: "test-g"
+    release: "quieting-sponge"
     chart: "cockroachdb-2.0.10"
 spec:
   template:
@@ -2884,8 +2959,27 @@ spec:
         command:
           - "/bin/bash"
           - "-ecx"
-          - "until /cockroach/cockroach init --insecure --host=test-g-cockroachdb-0.test-g-cockroachdb --port 26257; do sleep 5; done"
+          - "until /cockroach/cockroach init --insecure --host=quieting-sponge-cockroachdb-0.quieting-sponge-cockroachdb --port 26257; do sleep 5; done"
       restartPolicy: OnFailure
+---
+# Source: mytest/charts/frontend/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: quieting-sponge-frontend
+  labels:
+    app.kubernetes.io/name: frontend
+    helm.sh/chart: frontend-0.1.0
+    app.kubernetes.io/instance: quieting-sponge
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    
+spec:
+  rules:
+    - host: "fifoome.com"
+      http:
+        paths:
 ---
 # Source: mytest/charts/prometheus/templates/pushgateway-ingress.yaml
 apiVersion: extensions/v1beta1
@@ -2897,10 +2991,10 @@ metadata:
   labels:
     component: "pushgateway"
     app: prometheus
-    release: test-g
+    release: quieting-sponge
     chart: prometheus-8.6.1
     heritage: Tiller
-  name: test-g-prometheus-pushgateway
+  name: quieting-sponge-prometheus-pushgateway
 spec:
   rules:
     - host: pushgateway.domain.com
@@ -2908,35 +3002,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: test-g-prometheus-pushgateway
+              serviceName: quieting-sponge-prometheus-pushgateway
               servicePort: 9091
----
-# Source: mytest/templates/ingress.yaml
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: test-g-mytest
-  labels:
-    app.kubernetes.io/name: mytest
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
-    app.kubernetes.io/managed-by: Tiller
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    
-spec:
-  rules:
-    - host: fifoomeb.com
-      http:
-        paths:
-          - path: "/"
-            backend:
-              serviceName: ms-mytest
-              servicePort: 80
-    - host: fifoome.com
-      http:
-        paths:
-          - path: "/"
-            backend:
-              serviceName: ms-frontend
-              servicePort: 80

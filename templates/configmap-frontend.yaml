@@ -2,16 +2,16 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.frontend.name }}-special-config-frontend
+  name: {{ .Release.Name }}-frontend
   labels:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    app.kubernetes.io/name: {{ template "mytest.name" . }}
+    app.kubernetes.io/name: {{ .Release.Name }}-frontend
 data:
   # When the config map is mounted as a volume, these will be created as files.
   config.json: |
     {
-      "backend": "{{ include "mytest.fullname" . }}",
-      "backendPort": {{ index .Values "service" "port" | quote }}
+      "backend": "{{ .Release.Name }}-backend",
+      "backendPort": {{ index .Values "backend" "service" "port" | quote }}
     }

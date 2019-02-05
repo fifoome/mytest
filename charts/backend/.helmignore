@@ -20,8 +20,3 @@
 .idea/
 *.tmproj
 .vscode/
-
-flask/*
-react/*
-
-backup/*
