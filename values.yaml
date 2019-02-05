@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: fifoosab/flask
-  tag: 0.0.1
+  tag: 0.0.3
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -21,7 +21,7 @@ frontend:
     pullPolicy: IfNotPresent
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 80
 
 annotations: {}

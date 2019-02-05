@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "mytest.fullname" . }}-special-config-backend
+  name: {{ .Release.Name }}-{{ .Values.frontend.name }}-special-config-frontend
   labels:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -10,9 +10,8 @@ metadata:
     app.kubernetes.io/name: {{ template "mytest.name" . }}
 data:
   # When the config map is mounted as a volume, these will be created as files.
-  config.toml: |
-    [alias]
-    redis = "{{ .Release.Name }}-redis-ha"
-    redisport = {{ index .Values "redis-ha" "redis" "port" | quote }}
-    cockroach = "{{ .Release.Name }}-cockroachdb"
-    cockroachport = {{ index .Values "cockroachdb" "ExternalGrpcPort" | quote }}
+  config.json: |
+    {
+      "backend": "{{ include "mytest.fullname" . }}",
+      "backendPort": {{ index .Values "service" "port" | quote }}
+    }

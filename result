@@ -1,23 +1,20 @@
-[debug] Created tunnel using local port: '49253'
+[debug] Created tunnel using local port: '57469'
 
-[debug] SERVER: "127.0.0.1:49253"
+[debug] SERVER: "127.0.0.1:57469"
 
 [debug] Original chart version: ""
 [debug] CHART PATH: /Users/thedmbp/code/mytest
 
 NAME:   test-g
 REVISION: 1
-RELEASED: Mon Feb  4 18:10:15 2019
+RELEASED: Mon Feb  4 22:02:15 2019
 CHART: mytest-0.1.0
 USER-SUPPLIED VALUES:
 {}
 
 COMPUTED VALUES:
 affinity: {}
-annotations:
-  cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
-  hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
-  hpa.autoscaling.banzaicloud.io/minReplicas: "1"
+annotations: {}
 cockroachdb:
   CacheSize: 25%
   ClusterDomain: cluster.local
@@ -92,7 +89,7 @@ hpa-operator:
 image:
   pullPolicy: IfNotPresent
   repository: fifoosab/flask
-  tag: latest
+  tag: 0.0.3
 ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -759,26 +756,6 @@ tolerations: []
 
 HOOKS:
 ---
-# test-g-mytest-test-connection
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "test-g-mytest-test-connection"
-  labels:
-    app.kubernetes.io/name: mytest
-    helm.sh/chart: mytest-0.1.0
-    app.kubernetes.io/instance: test-g
-    app.kubernetes.io/managed-by: Tiller
-  annotations:
-    "helm.sh/hook": test-success
-spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args:  ['test-g-mytest:80']
-  restartPolicy: Never
----
 # test-g-redis-ha-service-test
 apiVersion: v1
 kind: Pod
@@ -799,6 +776,50 @@ spec:
       - sh
       - -c
       - redis-cli -h test-g-redis-ha -p 6379 info server
+  restartPolicy: Never
+---
+# test-g-cockroachdb-test
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "test-g-cockroachdb-test"
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: "client-test"
+    image: "cockroachdb/cockroach:v2.1.4"
+    imagePullPolicy: "Always"
+    command:
+      - "/cockroach/cockroach"
+      - "sql"
+      - "--insecure"
+      - "--host"
+      - "test-g-cockroachdb-public.mytest"
+      - "--port"
+      - "26257"
+      - "-e"
+      - "SHOW DATABASES;"
+  restartPolicy: Never
+---
+# test-g-mytest-test-connection
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "test-g-mytest-test-connection"
+  labels:
+    app.kubernetes.io/name: mytest
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/instance: test-g
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['test-g-mytest:80']
   restartPolicy: Never
 ---
 # test-g-redis-ha-configmap-test
@@ -840,30 +861,6 @@ spec:
   - name: probes
     configMap:
       name: test-g-redis-ha-probes
-  restartPolicy: Never
----
-# test-g-cockroachdb-test
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "test-g-cockroachdb-test"
-  annotations:
-    "helm.sh/hook": test-success
-spec:
-  containers:
-  - name: "client-test"
-    image: "cockroachdb/cockroach:v2.1.4"
-    imagePullPolicy: "Always"
-    command:
-      - "/cockroach/cockroach"
-      - "sql"
-      - "--insecure"
-      - "--host"
-      - "test-g-cockroachdb-public.mytest"
-      - "--port"
-      - "26257"
-      - "-e"
-      - "SHOW DATABASES;"
   restartPolicy: Never
 MANIFEST:
 
@@ -1300,6 +1297,25 @@ data:
         exit 1
     fi
 ---
+# Source: mytest/templates/configmap-frontend.yaml
+# This is a simple example of using a config map to create a single page static site.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-g-frontend-special-config-frontend
+  labels:
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/instance: test-g
+    helm.sh/chart: mytest-0.1.0
+    app.kubernetes.io/name: mytest
+data:
+  # When the config map is mounted as a volume, these will be created as files.
+  config.json: |
+    {
+      "backendIP": "test-g-mytest",
+      "backendPort": "80"
+    }
+---
 # Source: mytest/templates/configmap.yaml
 # This is a simple example of using a config map to create a single page static site.
 apiVersion: v1
@@ -1315,8 +1331,10 @@ data:
   # When the config map is mounted as a volume, these will be created as files.
   config.toml: |
     [alias]
-    redis=test-g-redis-ha:6379
-    cockroach=test-g-cockroachdb:26257
+    redis = "test-g-redis-ha"
+    redisport = "6379"
+    cockroach = "test-g-cockroachdb"
+    cockroachport = "26257"
 ---
 # Source: mytest/charts/hpa-operator/templates/service-account.yaml
 apiVersion: v1
@@ -1965,35 +1983,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-g-redis-ha-announce-1
-  labels:
-    app: redis-ha
-    heritage: "Tiller"
-    release: "test-g"
-    chart: redis-ha-3.1.3
-  annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
-spec:
-  publishNotReadyAddresses: true
-  type: ClusterIP
-  ports:
-  - name: server
-    port: 6379
-    protocol: TCP
-    targetPort: redis
-  - name: sentinel
-    port: 26379
-    protocol: TCP
-    targetPort: sentinel
-  selector:
-    release: test-g
-    app: redis-ha
-    "statefulset.kubernetes.io/pod-name": test-g-redis-ha-server-1
----
-# Source: mytest/charts/redis-ha/templates/redis-ha-announce-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
   name: test-g-redis-ha-announce-0
   labels:
     app: redis-ha
@@ -2018,6 +2007,35 @@ spec:
     release: test-g
     app: redis-ha
     "statefulset.kubernetes.io/pod-name": test-g-redis-ha-server-0
+---
+# Source: mytest/charts/redis-ha/templates/redis-ha-announce-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-g-redis-ha-announce-1
+  labels:
+    app: redis-ha
+    heritage: "Tiller"
+    release: "test-g"
+    chart: redis-ha-3.1.3
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  publishNotReadyAddresses: true
+  type: ClusterIP
+  ports:
+  - name: server
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  - name: sentinel
+    port: 26379
+    protocol: TCP
+    targetPort: sentinel
+  selector:
+    release: test-g
+    app: redis-ha
+    "statefulset.kubernetes.io/pod-name": test-g-redis-ha-server-1
 ---
 # Source: mytest/charts/redis-ha/templates/redis-ha-service.yaml
 apiVersion: v1
@@ -2050,9 +2068,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: test-g-mytest-frontend
+  name: test-g-frontend
   labels:
-    app.kubernetes.io/name: test-g-mytest-frontend
+    app.kubernetes.io/name: test-g-frontend
     helm.sh/chart: mytest-0.1.0
     app.kubernetes.io/instance: test-g
     app.kubernetes.io/managed-by: Tiller
@@ -2064,7 +2082,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: test-g-mytest-frontend
+    app.kubernetes.io/name: test-g-frontend
     app.kubernetes.io/instance: test-g
 ---
 # Source: mytest/templates/service.yaml
@@ -2310,31 +2328,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-g-mytest-frontend
+  name: test-g-frontend
   labels:
-    app.kubernetes.io/name: mytest-frontend
+    app.kubernetes.io/name: test-g-frontend
     helm.sh/chart: mytest-0.1.0
     app.kubernetes.io/instance: test-g
     app.kubernetes.io/managed-by: Tiller
-  annotations:
-    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
-    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
-    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
-    
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: mytest-frontend
+      app.kubernetes.io/name: test-g-frontend
       app.kubernetes.io/instance: test-g
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: mytest-frontend
+        app.kubernetes.io/name: test-g-frontend
         app.kubernetes.io/instance: test-g
     spec:
       containers:
-        - name: mytest-frontend
+        - name: test-g-frontend
           image: "fifoosab/react-docker:latest"
           imagePullPolicy: IfNotPresent
           resources:
@@ -2367,11 +2380,6 @@ metadata:
     helm.sh/chart: mytest-0.1.0
     app.kubernetes.io/instance: test-g
     app.kubernetes.io/managed-by: Tiller
-  annotations:
-    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
-    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
-    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
-    
 spec:
   replicas: 1
   selector:
@@ -2392,7 +2400,7 @@ spec:
           name: test-g-mytest-special-config-backend
       containers:
         - name: mytest
-          image: "fifoosab/flask:latest"
+          image: "fifoosab/flask:0.0.3"
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: config-volume-backend

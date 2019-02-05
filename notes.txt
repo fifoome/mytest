@@ -5,3 +5,5 @@ https://github.com/helm/charts/blob/master/stable/prometheus-operator/values.yam
 https://github.com/kubernetes-incubator/external-dns/blob/master/docs/tutorials/azure.md <- automatic dns
 
 https://docs.microsoft.com/en-us/azure/aks/static-ip <- static ip
+
+https://blog.jetstack.io/blog/kube-lego/ <- refresh certs

@@ -26,9 +26,9 @@
   408  locust -f loc_local.py --master --host=https://172.16.1.6:8050
   409  locust -f loc_local.py --host=https://172.16.1.6:8050
   410  locust -f loc_local.py --host=https://172.16.1.6:8050
-  411  vi loc_local.py 
+  411  vi loc_local.py
   412  locust -f loc_local.py --host=https://172.16.1.6:8050
-  413  vi loc_local.py 
+  413  vi loc_local.py
   414  locust -f loc_local.py --host=https://172.16.1.6:8050
   415  locust -f loc_local.py --host=https://172.16.1.5:8050
   416  locust -f loc_local.py --host=https://172.16.1.5:8050
@@ -44,7 +44,7 @@
   426  python3 -m pip freeze | grep getevent
   427  python3 -m  pip install gevent-zeromq
   428  locust -f loc_local.py --host=https://172.16.1.5:8050 --master
-  429  locust -f loc_local.py --host=https://172.16.1.5:8050 
+  429  locust -f loc_local.py --host=https://172.16.1.5:8050
   430  locust -f loc_local.py --slave --master=10.20.30.208
   431  locust -f loc_local.py --slave --master-host=10.20.30.208
   432  ip addr
@@ -96,7 +96,7 @@
   478  docker container prune
   479  docker volumes ls
   480  docker volume ls
-  481  docker volume 
+  481  docker volume
   482  docker volume prune
   483  docker-compose --version
   484  docker-compose -f setup.yml up
@@ -118,7 +118,7 @@
   500  sudo find / -name *station*
   501  brew update && brew install azure-cli
   502  az login
-  503  az 
+  503  az
   504  az resource
   505  az resource list
   506  az resource list | grep test
@@ -126,7 +126,7 @@
   508  az get-credential
   509  az --help
   510  az aks
-  511  az aks get-credential 
+  511  az aks get-credential
   512  az aks get-credentials
   513  az aks get-credentials --ressource-group test_ressource_group --name cluster-test
   514  az aks get-credentials --resource-group test_ressource_group --name cluster-test
@@ -154,7 +154,7 @@
   536  kubectl get   pod --all-namespaces=true
   537  kubectl get   pv --all-namespaces=true
   538  kubectl get    --all-namespaces=true
-  539  kubectl get 
+  539  kubectl get
   540  kubectl get statefulset
   541  kubectl get  statefulset  --all-namespaces=true
   542  cd ./code/
@@ -179,7 +179,7 @@
   561  helm dependency list
   562  helm dependency build
   563  helm install --name my-release stable/nginx-ingress
-  564  helm ls --app 
+  564  helm ls --app
   565  helm ls --all
   566  helm install --name my-release2 stable/nginx-ingress
   567  kubectl status
@@ -200,7 +200,7 @@
   582  ll charts/
   583  helm dependency update
   584  helm repo list
-  585  helm search stable 
+  585  helm search stable
   586  helm search stable  | nginx
   587  helm search stable  | grep nginx
   588  helm repo list
@@ -208,7 +208,7 @@
   590  helm dep build
   591   helm install --dry-run --debug .
   592   helm install --dry-run --debug . | grep fuck
-  593   helm install --dry-run --debug . 
+  593   helm install --dry-run --debug .
   594  helm dep build
   595  helm dep update
   596  helm dep build
@@ -336,8 +336,8 @@
   718  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller
   719  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller --yaml
   720  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller -o yaml
-  721  kubectl describe svc --namespace mytest -o yml test-c-nginx-ingress-controller 
-  722  kubectl describe svc --namespace mytest -ojson test-c-nginx-ingress-controller 
+  721  kubectl describe svc --namespace mytest -o yml test-c-nginx-ingress-controller
+  722  kubectl describe svc --namespace mytest -ojson test-c-nginx-ingress-controller
   723  kubectl describe svc --namespace mytest  test-c-nginx-ingress-controller -o=yaml
   724  kubectl describe svc --namespace mytest test-c-nginx-ingress-controller
   725  kubectl port-forward test-c-nginx-ingress-controller-84c94d89b5-2cg64  8080:8080 --namespace=mytest
@@ -353,7 +353,7 @@
   734  az openshift create -n oscluster -g osrg ` –node-vm-size Standard_DS4_v3`  --l eastus
   735  az openshift create -n oscluster -g osrg `–node-vm-size Standard_DS4_v3`  --l eastus
   736  az openshift create -n oscluster -g osrg --l eastus
-  737  cat ~/.ssh/id_rsa.pub 
+  737  cat ~/.ssh/id_rsa.pub
   738  helm del --purge test-c
   739   helm install --namespace mytest --name test-c .
   740  kubectl port-forward test-c-nginx-ingress-controller-stats  8080:18080 --namespace=mytest
@@ -376,7 +376,7 @@
   757  helm del --purge test-c
   758   helm install --namespace mytest --name test-c .
   759  kubectl edit svc test-c-nginx-ingress-controller-stats --namespace mytest
-  760  kubectl port-forward test-c-nginx-ingress-controller-b4fbb6987-mlhfs 18080:18080 --namespace mytest 
+  760  kubectl port-forward test-c-nginx-ingress-controller-b4fbb6987-mlhfs 18080:18080 --namespace mytest
   761  helm status test-c
   762  kubectl edit svc test-c-nginx-ingress-controller-stats --namespace mytest
   763  kubectl edit pod test-c-nginx-ingress-controller-b4fbb6987-mlhfs --namespace mytest
@@ -384,9 +384,9 @@
   765  kubectl exec -it test-c-mytest-7fd448b4c9-srf4n --namespace mytest -- /bin/bash
   766  helm del --purge test-c
   767   helm install --namespace mytest --name test-c .
-  768  kubectl port-forward test-c-mytest 80:80 --namespace mytest 
+  768  kubectl port-forward test-c-mytest 80:80 --namespace mytest
   769  helm status test-c
-  770  kubectl port-forward test-c-mytest-7fd448b4c9-vfdz7 18880:80 --namespace mytest 
+  770  kubectl port-forward test-c-mytest-7fd448b4c9-vfdz7 18880:80 --namespace mytest
   771  helm status test-c
   772  helm status test-c
   773  kubectl edit ingress --namespace mytest test-c-mytest
@@ -499,3 +499,5 @@
   880  git commit -m "second commit"
   881  git push -u origin master
   882  history > history
+  curl --resolve fifoomeb.com:80:40.121.36.210  http://fifoomeb.com:80/setdata?data=merde --insecure
+  curl --resolve fifoomeb.com:80:40.121.36.210  http://fifoomeb.com:80/ --insecure
