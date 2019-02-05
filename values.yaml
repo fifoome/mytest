@@ -6,20 +6,28 @@ replicaCount: 1
 
 image:
   repository: fifoosab/flask
-  tag: latest
+  tag: 0.0.1
   pullPolicy: IfNotPresent
 
 nameOverride: ""
 fullnameOverride: ""
 
+frontend:
+  name: frontend
+
+  image:
+    repository: fifoosab/react-docker
+    tag: latest
+    pullPolicy: IfNotPresent
+
 service:
   type: ClusterIP
   port: 80
 
-annotations:
-    hpa.autoscaling.banzaicloud.io/minReplicas: "1"
-    hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
-    cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
+annotations: {}
+    # hpa.autoscaling.banzaicloud.io/minReplicas: "1"
+    # hpa.autoscaling.banzaicloud.io/maxReplicas: "3"
+    # cpu.hpa.autoscaling.banzaicloud.io/targetAverageUtilization: "70"
 
 ingress:
   enabled: true
@@ -28,8 +36,12 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   paths:
     - path: /
-      host: "fifoome.com"
+      host: "fifoomeb.com"
       serviceName: "ms-mytest"
+      servicePort: "80"
+    - path: /
+      host: "fifoome.com"
+      serviceName: "ms-frontend"
       servicePort: "80"
   hosts:
     - chart-example.local
@@ -320,13 +332,13 @@ nginx-ingress:
 
     minAvailable: 1
 
-    resources:
-     limits:
-       cpu: 100m
-       memory: 64Mi
-     requests:
-       cpu: 100m
-       memory: 64Mi
+    resources: {}
+     # limits:
+     #   cpu: 100m
+     #   memory: 64Mi
+     # requests:
+     #   cpu: 100m
+     #   memory: 64Mi
 
     autoscaling:
       enabled: false
